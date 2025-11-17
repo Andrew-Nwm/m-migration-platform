@@ -1,5 +1,3 @@
-# En este archivo dejo un ejemplo de la organización a usar para la generación
-
 ---
 title: "Formulario I-765"
 description: "Solicitud de Autorización de Empleo"
@@ -120,3 +118,5 @@ El tiempo promedio de procesamiento es de **3 a 5 meses**.
 ---
 
 **Nota:** Asegúrese de revisar toda la información antes de enviar el formulario.
+
+## En este archivo dejo un ejemplo de la organización a usar para la generación
