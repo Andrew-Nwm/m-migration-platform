@@ -1,0 +1,164 @@
+---
+const navLinks = [
+	{ href: "#servicios", label: "Servicios" },
+	{ href: "#proceso", label: "Proceso" },
+	{ href: "#historias", label: "Historias" },
+	{ href: "#formularios", label: "Formularios" },
+];
+---
+
+<nav
+	class="fixed top-0 left-0 right-0 z-60 transition-all duration-300 bg-transparent"
+	id="main-nav"
+>
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="flex items-center justify-between h-20">
+			<!-- Logo -->
+			<a href="/" class="flex items-center space-x-3 group">
+				<img
+					src="icon/icono.svg"
+					alt="M-Migration LLC"
+					width="50"
+					height="50"
+					class="w-12 h-12 transition-transform group-hover:scale-110"
+				/>
+				<span class="text-xl font-bold text-white"> M-MIGRATION </span>
+			</a>
+
+			<!-- Desktop Navigation -->
+			<div class="hidden md:flex items-center space-x-8">
+				{
+					navLinks.map((link) => (
+						<a
+							href={link.href}
+							class="text-white/80 hover:text-white transition-colors text-sm font-medium relative group"
+						>
+							{link.label}
+							<span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#87b8c6] transition-all group-hover:w-full" />
+						</a>
+					))
+				}
+				<button
+					class="ml-4 px-4 py-2 text-sm bg-gradient-to-r from-[#87b8c6] to-[#2e707b] hover:opacity-90 rounded-full text-white font-medium"
+				>
+					Consulta Gratis
+				</button>
+			</div>
+
+			<!-- Mobile Menu Button -->
+			<button
+				id="mobile-menu-toggle"
+				class="md:hidden text-white"
+				aria-label="Toggle menu"
+			>
+				<svg
+					id="menu-icon"
+					class="w-6 h-6"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M4 6h16M4 12h16M4 18h16"></path>
+				</svg>
+				<svg
+					id="close-icon"
+					class="w-6 h-6 hidden"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"></path>
+				</svg>
+			</button>
+		</div>
+
+		<!-- Mobile Menu -->
+		<div
+			id="mobile-menu"
+			class="hidden md:hidden py-4 space-y-4 border-t border-white/10"
+		>
+			{
+				navLinks.map((link) => (
+					<a
+						href={link.href}
+						class="block text-white/80 hover:text-white transition-colors py-2 mobile-link"
+					>
+						{link.label}
+					</a>
+				))
+			}
+			<button
+				class="w-full px-4 py-2 bg-gradient-to-r from-[#87b8c6] to-[#2e707b] rounded-full text-white font-medium"
+			>
+				Consulta Gratis
+			</button>
+		</div>
+	</div>
+</nav>
+
+<script>
+	// Scroll effect
+	function handleScroll() {
+		const nav = document.getElementById("main-nav");
+		if (nav) {
+			if (window.scrollY > 50) {
+				nav.classList.remove("bg-transparent");
+				nav.classList.add(
+					"bg-black/90",
+					"backdrop-blur-xl",
+					"border-b",
+					"border-white/10"
+				);
+			} else {
+				nav.classList.add("bg-transparent");
+				nav.classList.remove(
+					"bg-black/90",
+					"backdrop-blur-xl",
+					"border-b",
+					"border-white/10"
+				);
+			}
+		}
+	}
+
+	// Mobile menu toggle
+	function setupMobileMenu() {
+		const toggle = document.getElementById("mobile-menu-toggle");
+		const menu = document.getElementById("mobile-menu");
+		const menuIcon = document.getElementById("menu-icon");
+		const closeIcon = document.getElementById("close-icon");
+		const mobileLinks = document.querySelectorAll(".mobile-link");
+
+		if (toggle && menu && menuIcon && closeIcon) {
+			toggle.addEventListener("click", () => {
+				menu.classList.toggle("hidden");
+				menuIcon.classList.toggle("hidden");
+				closeIcon.classList.toggle("hidden");
+			});
+
+			// Close menu when clicking on a link
+			mobileLinks.forEach((link) => {
+				link.addEventListener("click", () => {
+					menu.classList.add("hidden");
+					menuIcon.classList.remove("hidden");
+					closeIcon.classList.add("hidden");
+				});
+			});
+		}
+	}
+
+	// Initialize on page load
+	window.addEventListener("scroll", handleScroll);
+	document.addEventListener("DOMContentLoaded", setupMobileMenu);
+
+	// Re-initialize on Astro page navigation
+	document.addEventListener("astro:page-load", setupMobileMenu);
+</script>
