@@ -1,4 +1,4 @@
-# En este archivo dejo un ejemplo de la organización a usar para la generación de las
+# En este archivo dejo un ejemplo de la organización a usar para la generación
 
 ---
 title: "Formulario I-765"
