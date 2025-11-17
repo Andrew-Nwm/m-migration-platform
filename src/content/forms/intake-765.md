@@ -94,7 +94,7 @@ fields:
     required: true
 ---
 
-# Instrucciones para el Formulario I-765
+## Instrucciones para el Formulario I-765
 
 Este formulario se utiliza para solicitar la **Autorización de Empleo (EAD)** en Estados Unidos.
 

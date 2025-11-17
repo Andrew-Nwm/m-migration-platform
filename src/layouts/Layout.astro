@@ -2,11 +2,31 @@
 interface Props {
 	title?: string;
 	description?: string;
+	keywords?: string;
+	authors?: string;
+	openGraph?: {
+		title: string;
+		description: string;
+		type: string;
+	};
 }
 
+export const viewport = {
+	width: "device-width",
+	initialScale: 1,
+	themeColor: "#2e707b",
+};
+
 const {
-	title = "Formularios de Migración",
-	description = "Sistema de formularios migratorios",
+	title = "M-Migration LLC - Tu Camino Hacia el Sueño American",
+	description = "Servicios profesionales de inmigración. Visas de trabajo, reunificación familiar, VAWA, Visa U y T. Más de 15 años ayudando familias a cumplir su sueño americano.",
+	keywords = "inmigración, visas de trabajo, reunificación familiar, VAWA, Visa U, Visa T, servicios legales, M-Migration LLC",
+	authors = "M-Migration LLC",
+	openGraph = {
+		title: "M-Migration LLC - Servicios de Inmigración",
+		description: "Tu socio de confianza en el camino hacia el sueño americano",
+		type: "website",
+	},
 } = Astro.props;
 ---
 
@@ -15,9 +35,17 @@ const {
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content={viewport.themeColor} />
 		<meta name="description" content={description} />
+		<meta name="keywords" content={keywords} />
+		<meta name="author" content={authors} />
+
+		<meta property="og:type" content={openGraph.type} />
+		<meta property="og:title" content={openGraph.title} />
+		<meta property="og:description" content={openGraph.description} />
+
 		<title>{title}</title>
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href="icon/icono.svg" />
 	</head>
 	<body class="min-h-screen flex flex-col bg-gray-50">
 		<slot name="header" />
