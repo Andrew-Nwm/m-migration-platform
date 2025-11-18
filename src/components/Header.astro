@@ -1,9 +1,10 @@
 ---
 const navLinks = [
-	{ href: "#services", label: "Servicios" },
-	{ href: "#process", label: "Proceso" },
-	{ href: "#testimonials", label: "Historias" },
-	{ href: "#forms", label: "Formularios" },
+	{ href: "#hero-section", label: "Inicio" },
+	{ href: "#services-section", label: "Servicios" },
+	{ href: "#process-section", label: "Proceso" },
+	{ href: "#testimonials-section", label: "Historias" },
+	{ href: "#forms-section", label: "Formularios" },
 ];
 ---
 
@@ -13,7 +14,7 @@ const navLinks = [
 >
 	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
 		<div class="flex items-center justify-between h-20">
-			<a href="/" class="flex items-center space-x-3 group">
+			<a href="#hero-section" class="flex items-center space-x-3 group">
 				<img
 					src="icon/icono.svg"
 					alt="M-Migration LLC"
@@ -93,11 +94,12 @@ const navLinks = [
 					</a>
 				))
 			}
-			<button
-				class="w-full px-4 py-2 bg-gradient-to-r from-[#87b8c6] to-[#2e707b] rounded-full text-white font-medium"
+			<a
+				href="mailto:m-migration@outlook.com"
+				class="block w-full px-4 py-2 bg-gradient-to-r from-[#87b8c6] to-[#2e707b] rounded-full text-white font-medium text-center"
 			>
 				Consulta Gratis
-			</button>
+			</a>
 		</div>
 	</div>
 </nav>
