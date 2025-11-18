@@ -194,23 +194,21 @@ class VideoScrollHandler implements ScrollHandler {
 		) as HTMLVideoElement | null;
 		this.playOverlay = document.getElementById("play-overlay");
 
-		if (
-			!this.videoSection ||
-			!this.videoWrapper ||
-			!this.storyVideo ||
-			!this.playOverlay
-		) {
+		if (!this.videoSection || !this.videoWrapper) {
 			console.warn("Video section elements not found");
 			return;
 		}
 
 		this.boundHandleScroll = this.handleScroll.bind(this);
-		this.boundHandlePlayVideo = this.handlePlayVideo.bind(this);
-		this.boundHandleVideoEnd = this.handleVideoEnd.bind(this);
-
 		window.addEventListener("scroll", this.boundHandleScroll);
-		this.playOverlay.addEventListener("click", this.boundHandlePlayVideo);
-		this.storyVideo.addEventListener("ended", this.boundHandleVideoEnd);
+
+		// Optional: Add play overlay handlers if it exists
+		if (this.playOverlay && this.storyVideo) {
+			this.boundHandlePlayVideo = this.handlePlayVideo.bind(this);
+			this.boundHandleVideoEnd = this.handleVideoEnd.bind(this);
+			this.playOverlay.addEventListener("click", this.boundHandlePlayVideo);
+			this.storyVideo.addEventListener("ended", this.boundHandleVideoEnd);
+		}
 
 		this.handleScroll();
 	}
@@ -219,15 +217,21 @@ class VideoScrollHandler implements ScrollHandler {
 		if (!this.videoSection || !this.videoWrapper) return;
 
 		const rect = this.videoSection.getBoundingClientRect();
+		const sectionHeight = rect.height;
+		const viewportHeight = window.innerHeight;
+
+		// Calculate progress based on how much of the section has scrolled
 		const progress = Math.max(
 			0,
-			Math.min(1, -rect.top / (rect.height - window.innerHeight))
+			Math.min(1, -rect.top / (sectionHeight - viewportHeight))
 		);
 
-		// Scale and fade effect
-		const scale = 0.8 + progress * 0.2;
-		const opacity = Math.max(0.3, 1 - progress * 0.5);
-		this.videoWrapper.style.transform = `scale(${scale})`;
+		// Video grows as you scroll down - starts at 1.0 and grows to 1.3
+		const scale = 1 + progress * 0.3; // Starts at 1.0, grows to 1.3
+		const opacity = Math.max(0.5, 1 - progress * 0.4);
+		const translateY = (1 - progress) * 50; // Moves up as you scroll
+
+		this.videoWrapper.style.transform = `scale(${scale}) translateY(${translateY}px)`;
 		this.videoWrapper.style.opacity = opacity.toString();
 	}
 
@@ -438,7 +442,7 @@ class TestimonialsScrollHandler implements ScrollHandler {
 		const triggerPoint = window.innerHeight * 0.9;
 		const progress = Math.max(
 			0,
-			Math.min(1, (triggerPoint - rect.top) / (window.innerHeight * 1.5))
+			Math.min(1, (triggerPoint - rect.top) / (window.innerHeight * 0.8))
 		);
 
 		this.testimonialsBg.style.transform = `translateY(${progress * 100}px)`;
@@ -446,7 +450,7 @@ class TestimonialsScrollHandler implements ScrollHandler {
 		this.testimonialCards.forEach((card, idx) => {
 			const cardProgress = Math.min(
 				1,
-				Math.max(0, (progress - idx * 0.2) * 1.8)
+				Math.max(0, (progress - idx * 0.15) * 2.5)
 			);
 
 			(card as HTMLElement).style.opacity = cardProgress.toString();
@@ -496,7 +500,7 @@ class FormsScrollHandler implements ScrollHandler {
 		const triggerPoint = window.innerHeight * 0.9;
 		const progress = Math.max(
 			0,
-			Math.min(1, (triggerPoint - rect.top) / (window.innerHeight * 1.5))
+			Math.min(1, (triggerPoint - rect.top) / (window.innerHeight * 0.6))
 		);
 
 		// Animate gradient background
@@ -508,10 +512,7 @@ class FormsScrollHandler implements ScrollHandler {
 
 		// Animate each form card - visible progression
 		this.formCards.forEach((card, idx) => {
-			const cardProgress = Math.min(
-				1,
-				Math.max(0, (progress - idx * 0.15) * 2)
-			);
+			const cardProgress = Math.min(1, Math.max(0, (progress - idx * 0.1) * 3));
 
 			(card as HTMLElement).style.opacity = cardProgress.toString();
 			(card as HTMLElement).style.transform = `translateY(${
