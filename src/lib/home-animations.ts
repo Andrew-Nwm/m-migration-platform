@@ -3,6 +3,92 @@ interface ScrollHandler {
 	cleanup?: () => void;
 }
 
+class HeroStatsHandler implements ScrollHandler {
+	private statsCards: NodeListOf<Element> | null = null;
+	private hasAnimated = false;
+	private boundHandleScroll: (() => void) | null = null;
+
+	init(): void {
+		this.statsCards = document.querySelectorAll(".stat-card");
+
+		if (!this.statsCards || this.statsCards.length === 0) {
+			console.warn("Stats cards not found");
+			return;
+		}
+
+		this.boundHandleScroll = this.handleScroll.bind(this);
+		window.addEventListener("scroll", this.boundHandleScroll);
+		this.handleScroll();
+	}
+
+	private handleScroll(): void {
+		if (!this.statsCards || this.hasAnimated) return;
+
+		const firstCard = this.statsCards[0] as HTMLElement;
+		const rect = firstCard.getBoundingClientRect();
+
+		// Trigger when stats are visible
+		if (rect.top < window.innerHeight * 0.9) {
+			this.hasAnimated = true;
+			this.animateStats();
+		}
+	}
+
+	private animateStats(): void {
+		if (!this.statsCards) return;
+
+		this.statsCards.forEach((card, idx) => {
+			const valueElement = card.querySelector(".stat-value") as HTMLElement;
+			if (!valueElement) return;
+
+			const finalValue = valueElement.textContent || "";
+			const isPercentage = finalValue.includes("%");
+			const hasPlus = finalValue.includes("+");
+			const numericValue = parseInt(finalValue.replace(/\D/g, ""), 10);
+
+			if (isNaN(numericValue)) return;
+
+			let currentValue = 0;
+			const duration = 2000; // 2 seconds
+			const startTime = performance.now() + idx * 150; // Stagger animation
+
+			const animate = (currentTime: number) => {
+				const elapsed = currentTime - startTime;
+
+				if (elapsed < 0) {
+					requestAnimationFrame(animate);
+					return;
+				}
+
+				const progress = Math.min(elapsed / duration, 1);
+				// Easing function for smooth animation
+				const easeOut = 1 - Math.pow(1 - progress, 3);
+				currentValue = Math.floor(easeOut * numericValue);
+
+				let displayValue = currentValue.toString();
+				if (hasPlus) displayValue += "+";
+				if (isPercentage) displayValue += "%";
+				if (finalValue.includes("/"))
+					displayValue = finalValue.replace(/^\d+/, currentValue.toString());
+
+				valueElement.textContent = displayValue;
+
+				if (progress < 1) {
+					requestAnimationFrame(animate);
+				}
+			};
+
+			requestAnimationFrame(animate);
+		});
+	}
+
+	cleanup(): void {
+		if (this.boundHandleScroll) {
+			window.removeEventListener("scroll", this.boundHandleScroll);
+		}
+	}
+}
+
 class ServicesScrollHandler implements ScrollHandler {
 	private servicesSection: HTMLElement | null = null;
 	private gridBackground: HTMLElement | null = null;
@@ -449,7 +535,7 @@ class AnimationManager {
 
 		// Initialize all handlers (HeroScrollHandler disabled - hero is now static)
 		this.handlers = [
-			// new HeroScrollHandler(), // Disabled - hero no longer uses scroll effects
+			new HeroStatsHandler(),
 			new ServicesScrollHandler(),
 			new VideoScrollHandler(),
 			new CarouselHandler(),

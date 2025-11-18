@@ -269,3 +269,30 @@ textarea,
 button {
 	cursor: pointer;
 }
+
+/* Wave effect animation for stat cards */
+@keyframes wave {
+	0% {
+		transform: translateX(-100%) translateY(-100%) rotate(0deg);
+	}
+	50% {
+		transform: translateX(100%) translateY(0%) rotate(180deg);
+	}
+	100% {
+		transform: translateX(-100%) translateY(-100%) rotate(360deg);
+	}
+}
+
+.wave-effect {
+	position: absolute;
+	width: 200%;
+	height: 200%;
+	background: radial-gradient(
+		circle,
+		rgba(135, 184, 198, 0.4) 0%,
+		rgba(46, 112, 123, 0.2) 40%,
+		transparent 70%
+	);
+	animation: wave 4s ease-in-out infinite;
+	pointer-events: none;
+}
