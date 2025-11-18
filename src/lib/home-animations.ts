@@ -114,6 +114,16 @@ class ServicesScrollHandler implements ScrollHandler {
 			return;
 		}
 
+		// Inicializar estilos
+		this.servicesTitle.style.opacity = "0";
+		this.servicesTitle.style.transform = "translateY(30px)";
+		this.servicesSubtitle.style.opacity = "0";
+		this.servicesSubtitle.style.transform = "translateY(30px)";
+		this.serviceCards.forEach((card) => {
+			(card as HTMLElement).style.opacity = "0";
+			(card as HTMLElement).style.transform = "translateY(30px)";
+		});
+
 		this.boundHandleScroll = this.handleScroll.bind(this);
 		window.addEventListener("scroll", this.boundHandleScroll);
 		this.handleScroll();
@@ -349,6 +359,25 @@ class ProcessScrollHandler implements ScrollHandler {
 			return;
 		}
 
+		// Inicializar estilos
+		this.processSteps.forEach((step) => {
+			const icon = step.querySelector(".step-icon") as HTMLElement;
+			const content = step.querySelector(".step-content") as HTMLElement;
+			const line = step.querySelector(".step-line") as HTMLElement;
+
+			if (icon) {
+				icon.style.opacity = "0";
+				icon.style.transform = "scale(0.8)";
+			}
+			if (content) {
+				content.style.opacity = "0";
+				content.style.transform = "translateX(50px)";
+			}
+			if (line) {
+				line.style.transform = "scaleY(0)";
+			}
+		});
+
 		this.boundHandleScroll = this.handleScroll.bind(this);
 		window.addEventListener("scroll", this.boundHandleScroll);
 		this.handleScroll();
@@ -424,6 +453,12 @@ class TestimonialsScrollHandler implements ScrollHandler {
 			return;
 		}
 
+		// Inicializar estilos
+		this.testimonialCards.forEach((card) => {
+			(card as HTMLElement).style.opacity = "0";
+			(card as HTMLElement).style.transform = "translateY(30px) rotateX(5deg)";
+		});
+
 		this.boundHandleScroll = this.handleScroll.bind(this);
 		window.addEventListener("scroll", this.boundHandleScroll);
 		this.handleScroll();
@@ -486,6 +521,12 @@ class FormsScrollHandler implements ScrollHandler {
 			console.warn("Forms section elements not found");
 			return;
 		}
+
+		// Inicializar estilos
+		this.formCards.forEach((card) => {
+			(card as HTMLElement).style.opacity = "0";
+			(card as HTMLElement).style.transform = "translateY(50px)";
+		});
 
 		this.boundHandleScroll = this.handleScroll.bind(this);
 		window.addEventListener("scroll", this.boundHandleScroll);
