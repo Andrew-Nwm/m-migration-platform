@@ -4,7 +4,6 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 
-// Success Stories Data
 const successStories = [
 	{
 		name: "María González",
@@ -37,14 +36,12 @@ const successStories = [
 	{
       name: 'Lucía Fernández',
       country: 'Perú',
-      visa: 'Reunificación Familiar',
-      rating: 5,
+      visa: 'Peticiones familiares',
       image: '/professional-woman-happy.jpg',
-      text: 'Después de años separada de mi familia, M-Migration hizo posible nuestra reunificación. El equipo trabajó incansablemente en mi caso. Los recomiendo con los ojos cerrados.',
+	quote: 'Reuní a mi familia después de años de separación. Siempre me mantuvieron informada en cada paso.',
     }
 ];
 
-// Testimonials Data
 const testimonials = [
 	{
 		name: "Roberto Sánchez",
@@ -206,7 +203,7 @@ const forms = [
 	</section>
 
 	<!-- Servicios Section -->
-	<section id="services-section" class="relative bg-black py-20 overflow-hidden">
+	<section id="services" class="relative bg-black py-20 overflow-hidden">
 		<!-- Animated Background Grid -->
 		<div class="absolute inset-0 opacity-20">
 			<div
@@ -413,7 +410,7 @@ const forms = [
 	</section>
 
 	<!-- Process Reveal Section -->
-	<section id="process-section" class="relative bg-black py-32 overflow-hidden">
+	<section id="process" class="relative bg-black py-32 overflow-hidden">
 		<div class="container mx-auto px-4">
 			<div class="text-center mb-20">
 				<h2 class="text-5xl md:text-7xl font-bold text-white mb-6">
@@ -513,7 +510,7 @@ const forms = [
 	</section>
 
 	<!-- Parallax Testimonials Section -->
-	<section id="testimonials-section" class="relative bg-linear-to-b from-black to-[#0f3f4c]/30 py-32 overflow-hidden">
+	<section id="testimonials" class="relative bg-linear-to-b from-black to-[#0f3f4c]/30 py-32 overflow-hidden">
 		<!-- Animated Background -->
 		<div class="absolute inset-0">
 			<div
@@ -580,7 +577,7 @@ const forms = [
 	</section>
 
 	<!-- Forms Showcase Section -->
-	<section id="forms-section" class="relative bg-black py-32 overflow-hidden">
+	<section id="forms" class="relative bg-black py-32 overflow-hidden">
 		<!-- Animated Gradient Background -->
 		<div class="absolute inset-0">
 			<div
@@ -681,14 +678,15 @@ const forms = [
 				</p>
 
 				<div class="flex flex-col sm:flex-row gap-6 justify-center mb-16">
-					<button
-						class="text-lg px-10 py-7 bg-white text-[#0f3f4c] hover:bg-white/90 rounded-full group font-bold transition-colors"
+					<a
+						href="mailto:m-migration@outlook.com"
+						class="text-lg px-10 py-7 bg-white text-[#0f3f4c] hover:bg-white/90 rounded-full group font-bold transition-colors inline-block"
 					>
 						Consulta Gratuita
 						<svg class="inline-block ml-2 h-6 w-6 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
 						</svg>
-					</button>
+					</a>
 					<button
 						class="text-lg px-10 py-7 border-2 border-white text-white hover:bg-white/10 rounded-full transition-colors"
 					>
@@ -709,12 +707,12 @@ const forms = [
 						</div>
 						<div class="text-left">
 							<div class="text-sm text-white/70">Llámanos</div>
-							<div class="text-lg font-semibold">+1 (234) 567-890</div>
+							<div class="text-lg font-semibold">+1 (646) 427-2634</div>
 						</div>
 					</a>
 
 					<a
-						href="mailto:info@m-migration.com"
+						href="mailto:m-migration@outlook.com"
 						class="flex items-center gap-3 text-white hover:text-white/80 transition-colors group"
 					>
 						<div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -724,7 +722,7 @@ const forms = [
 						</div>
 						<div class="text-left">
 							<div class="text-sm text-white/70">Escríbenos</div>
-							<div class="text-lg font-semibold">info@m-migration.com</div>
+							<div class="text-lg font-semibold">m-migration@outlook.com</div>
 						</div>
 					</a>
 				</div>
