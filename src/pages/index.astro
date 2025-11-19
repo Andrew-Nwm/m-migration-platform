@@ -121,7 +121,6 @@ const forms = [
 
 	<!-- Hero Section -->
 	<section id="hero-section" class="relative min-h-screen bg-black flex items-center justify-center overflow-hidden">
-		<!-- Background Image -->
 		<div class="absolute inset-0 z-0 opacity-30">
 			<div
 				class="w-full h-full bg-cover bg-center opacity-30"
@@ -176,7 +175,6 @@ const forms = [
 				</button>
 			</div>
 
-			<!-- Floating Stats -->
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
 				{
 					[
@@ -304,7 +302,7 @@ const forms = [
 	</section>
 
 	<!-- Video Transition Section -->
-	<section id="video-section" class="relative h-[150vh] bg-black">
+	<section id="video-section" class="hidden md:block relative h-[150vh] bg-black">
 		<div class="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
 			<div
 				id="video-wrapper"
@@ -449,35 +447,35 @@ const forms = [
 					},
 				].map((step, idx) => (
 					<div class="relative process-step" data-index={idx}>
-						<div class="flex items-center gap-8 mb-16">
+						<div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-12 md:mb-16">
 							<!-- Number and Icon -->
 							<div class="shrink-0 relative step-icon">
 								<div
-									class="w-32 h-32 rounded-full flex items-center justify-center relative"
+									class="w-20 h-20 md:w-32 md:h-32 rounded-full flex items-center justify-center relative"
 									style={`background: linear-gradient(135deg, ${step.color}, ${step.color}dd);`}
 								>
 									{step.icon === 'file' && (
-										<svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-8 h-8 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 										</svg>
 									)}
 									{step.icon === 'user' && (
-										<svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-8 h-8 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 										</svg>
 									)}
 									{step.icon === 'clock' && (
-										<svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-8 h-8 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
 										</svg>
 									)}
 									{step.icon === 'check' && (
-										<svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg class="w-8 h-8 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 										</svg>
 									)}
 									<div
-										class="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-white flex items-center justify-center font-bold text-xl"
+										class="absolute -bottom-1 -right-1 md:-bottom-2 md:-right-2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-white flex items-center justify-center font-bold text-sm md:text-xl"
 										style={`color: ${step.color};`}
 									>
 										{idx + 1}
@@ -487,8 +485,8 @@ const forms = [
 
 							<!-- Content -->
 							<div class="flex-1 step-content">
-								<h3 class="text-4xl font-bold text-white mb-4">{step.title}</h3>
-								<p class="text-xl text-white/70 max-w-2xl leading-relaxed">
+								<h3 class="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-4">{step.title}</h3>
+								<p class="text-base md:text-xl text-white/70 max-w-2xl leading-relaxed">
 									{step.description}
 								</p>
 							</div>
@@ -496,7 +494,7 @@ const forms = [
 
 						<!-- Connecting Line -->
 						{idx < 3 && (
-							<div class="absolute left-16 top-32 w-0.5 h-16 bg-white/10 overflow-hidden">
+							<div class="hidden md:block absolute left-16 top-32 w-0.5 h-16 bg-white/10 overflow-hidden">
 								<div
 									class="w-full bg-linear-to-b from-secondary to-primary h-full origin-top step-line"
 								>
