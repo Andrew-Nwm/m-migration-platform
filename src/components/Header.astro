@@ -6,6 +6,11 @@ const navLinks = [
 	{ href: "#testimonials-section", label: "Historias" },
 	{ href: "#forms-section", label: "Formularios" },
 ];
+
+// contact-data
+const phone = "16464272634";
+const message = "Hola, estoy interesado en sus servicios de inmigración.";
+const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 ---
 
 <nav
@@ -40,10 +45,12 @@ const navLinks = [
 					))
 				}
 				<a
-					href="mailto:m-migration@outlook.com"
+					href={whatsappLink}
+					target="_blank"
+					rel="noopener noreferrer"
 					class="ml-4 px-4 py-2 text-sm bg-gradient-to-r from-[#87b8c6] to-[#2e707b] hover:opacity-90 rounded-full text-white font-medium inline-block"
 				>
-					Consulta Gratis
+					Contacto Gratis
 				</a>
 			</div>
 
@@ -97,10 +104,12 @@ const navLinks = [
 				))
 			}
 			<a
-				href="mailto:m-migration@outlook.com"
+				href={whatsappLink}
+				target="_blank"
+				rel="noopener noreferrer"
 				class="block w-full px-4 py-2 bg-gradient-to-r from-[#87b8c6] to-[#2e707b] rounded-full text-white font-medium text-center"
 			>
-				Consulta Gratis
+				Contacto Gratis
 			</a>
 		</div>
 	</div>

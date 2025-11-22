@@ -1,3 +1,9 @@
+---
+const phone = "16464272634";
+const message = "Hola, estoy interesado en sus servicios de inmigración.";
+const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+---
+
 <footer id="contact" class="relative w-full bg-black border-t border-white/10">
 	<div
 		class="absolute inset-0 bg-gradient-to-t from-[#0f3f4c]/20 to-transparent pointer-events-none"
@@ -19,7 +25,7 @@
 					<span class="text-lg font-bold text-white"> M-MIGRATION LLC </span>
 				</div>
 				<p class="text-sm text-white/70 mb-6 leading-relaxed">
-					Tu socio de confianza en el camino hacia el sueño americano.
+					Especialistas en llenado de formularios migratorios.
 				</p>
 				<div class="flex space-x-3">
 					<a
@@ -108,11 +114,6 @@
 							Visa U y T
 						</a>
 					</li>
-					<li>
-						<a href="#" class="hover:text-[#87b8c6] transition-colors">
-							Green Card
-						</a>
-					</li>
 				</ul>
 			</div>
 
@@ -122,27 +123,38 @@
 				</h3>
 				<ul class="space-y-3 text-sm text-white/70">
 					<li>
-						<a href="#about" class="hover:text-[#87b8c6] transition-colors">
+						<a
+							href="#hero-section"
+							class="hover:text-[#87b8c6] transition-colors"
+						>
 							Sobre Nosotros
 						</a>
 					</li>
 					<li>
-						<a href="#" class="hover:text-[#87b8c6] transition-colors">
-							Nuestro Equipo
+						<a
+							href={whatsappLink}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-[#87b8c6] transition-colors"
+						>
+							Nosotros
 						</a>
 					</li>
 					<li>
-						<a href="#" class="hover:text-[#87b8c6] transition-colors">
+						<a
+							href="testimonials-section"
+							class="hover:text-[#87b8c6] transition-colors"
+						>
 							Testimonios
 						</a>
 					</li>
 					<li>
-						<a href="#" class="hover:text-[#87b8c6] transition-colors">
-							Blog
-						</a>
-					</li>
-					<li>
-						<a href="#" class="hover:text-[#87b8c6] transition-colors">
+						<a
+							href={whatsappLink}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="hover:text-[#87b8c6] transition-colors"
+						>
 							Preguntas Frecuentes
 						</a>
 					</li>
@@ -167,10 +179,22 @@
 							<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
 							<circle cx="12" cy="10" r="3"></circle>
 						</svg>
-						<span
-							>New York, 2nd fl, 11373. 272 north broad st Elizabeth new jersey
-							07202</span
+						<span>272 Nord Broad St, Elizabeth, New Jersey, 07202</span>
+					</li>
+					<li class="flex items-start space-x-3">
+						<svg
+							class="w-5 h-5 text-[#87b8c6] flex-shrink-0 mt-0.5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							stroke-width="2"
+							stroke-linecap="round"
+							stroke-linejoin="round"
 						>
+							<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+							<circle cx="12" cy="10" r="3"></circle>
+						</svg>
+						<span>40-01 75th St, New York, NY 11373, Estados Unidos</span>
 					</li>
 					<li class="flex items-center space-x-3">
 						<svg
@@ -186,7 +210,11 @@
 								d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
 							></path>
 						</svg>
-						<span>+1 (646) 427-2634</span>
+						<span>
+							<a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+								+1 (646) 427-2634
+							</a>
+						</span>
 					</li>
 					<li class="flex items-center space-x-3">
 						<svg
@@ -201,31 +229,38 @@
 							<rect width="20" height="16" x="2" y="4" rx="2"></rect>
 							<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
 						</svg>
-						<span>m-migration@outlook.com</span>
+						<a
+							href="mailto:m-migration@outlook.com"
+							class="hover:text-[#87b8c6] transition-colors"
+						>
+							m-migration@outlook.com
+						</a>
 					</li>
 				</ul>
 			</div>
 		</div>
 
+		<!-- Disclaimer -->
+		<div class="mb-8">
+			<div
+				class="max-w-4xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-6"
+			>
+				<p class="text-xs text-white/70 text-center leading-relaxed">
+					<strong class="text-white/90">Aviso Importante:</strong> No somos abogados,
+					no ofrecemos asesoramiento legal ni actuamos en calidad de tales. Nuestro
+					servicio se centra en asistir con el llenado de formularios migratorios.
+				</p>
+			</div>
+		</div>
+
 		<div class="border-t border-white/10 pt-8">
 			<div
-				class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0"
+				class="flex flex-col items-center text-center space-y-4 md:space-y-0"
 			>
-				<p class="text-sm text-white/60 text-center md:text-left">
+				<p class="text-sm text-white/60 text-center">
 					© {new Date().getFullYear()} M-Migration LLC - Quantyx Tech Solutions.
 					Todos los derechos reservados.
 				</p>
-				<div class="flex space-x-6 text-sm text-white/60">
-					<a href="#" class="hover:text-[#87b8c6] transition-colors">
-						Política de Privacidad
-					</a>
-					<a href="#" class="hover:text-[#87b8c6] transition-colors">
-						Términos de Servicio
-					</a>
-					<a href="#" class="hover:text-[#87b8c6] transition-colors">
-						Aviso Legal
-					</a>
-				</div>
 			</div>
 		</div>
 	</div>

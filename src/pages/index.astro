@@ -4,40 +4,45 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 
+// contact-data
+const phone = "16464272634";
+const message = "Hola, estoy interesado en sus servicios de inmigración.";
+const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
 const successStories = [
 	{
 		name: "María González",
 		country: "México",
 		visa: "Visa U - Aprobada",
 		quote: "Gracias a su apoyo profesional, pude obtener mi visa U. Ahora tengo la tranquilidad que buscaba para mi familia.",
-		image: "/professional-latina-woman-smiling.png"
+		image: "/first-woman.jpg"
 	},
 	{
 		name: "Carlos Hernández",
 		country: "Colombia",
 		visa: "I-765 Aprobado",
 		quote: "El proceso fue rápido y transparente. Ahora puedo trabajar legalmente y construir un mejor futuro.",
-		image: "/professional-latino-man-smiling.jpg"
+		image: "/first-man.jpg"
 	},
 	{
 		name: "Ana Martínez",
 		country: "Venezuela",
 		visa: "VAWA - Aprobada",
 		quote: "Me ayudaron en el momento más difícil de mi vida. Estoy eternamente agradecida por su dedicación.",
-		image: "/professional-woman-smiling.png"
+		image: "/second-woman.jpg"
 	},
 	{
 		name: "Luis Pérez",
 		country: "Honduras",
 		visa: "Visa T - Aprobada",
 		quote: "Profesionales comprometidos que realmente se preocupan por sus clientes. Recomendados al 100%.",
-		image: "/professional-man-smiling.png"
+		image: "/second-man.jpg"
 	},
 	{
       name: 'Lucía Fernández',
       country: 'Perú',
       visa: 'Peticiones familiares',
-      image: '/professional-woman-happy.jpg',
+      image: '/third-woman.jpg',
 	quote: 'Reuní a mi familia después de años de separación. Siempre me mantuvieron informada en cada paso.',
     }
 ];
@@ -48,21 +53,21 @@ const testimonials = [
 		role: "Ingeniero Civil - Cliente - Visa U",
 		text: "La mejor decisión que tomé fue confiar en M-Migration. Su equipo me guió en cada paso y ahora trabajo en mi campo profesional en Estados Unidos",
 		rating: 5,
-		image: "/professional-latino-man-headshot.png"
+		image: "/third-man.jpg"
 	},
 	{
 		name: "Isabella Torres",
 		role: "Emprendedora - Cliente - Visa U",
 		text: "Gracias a su experiencia, pude traer a mi familia conmigo. El proceso fue claro y siempre estuvieron disponibles para responder mis dudas.",
 		rating: 5,
-		image: "/professional-latina-woman-headshot.png"
+		image: "/fourth-woman.jpg"
 	},
 	{
 		name: "Diego Morales",
 		role: "Chef - Cliente - VAWA",
 		text: "Después de años trabajando sin documentos, M-Migration me ayudó a regularizar mi situación. Ahora tengo mi propio restaurante.",
 		rating: 5,
-		image: "/chef-latino-man-portrait.jpg"
+		image: "/fourth-man.jpg"
 	}
 ];
 
@@ -114,8 +119,8 @@ const forms = [
 ---
 
 <Layout
-	title="M-Migration LLC - Expertos en Procesos Migratorios"
-	description="Nos dedicamos a procesos migratorios. Asesoría profesional en VAWA, Visa U, Visa T, permisos de trabajo y más. Tu camino hacia el sueño americano empieza aquí."
+	title="M-Migration LLC - Especialistas en Llenado de Formularios Migratorios"
+	description="Nos dedicamos a procesos migratorios. Servicio profesional de llenado de formularios para VAWA, Visa U, Visa T, permisos de trabajo y más. Tu camino hacia el sueño americano empieza aquí."
 >
 	<Header slot="header" />
 
@@ -146,12 +151,12 @@ const forms = [
 			<p
 				class="text-xl md:text-2xl text-white/90 mb-12 font-light max-w-3xl mx-auto"
 			>
-				Transformamos sueños en realidad. Expertos en inmigración con más de
+				Transformamos sueños en realidad. Especialistas en llenado de formularios con más de
 				15 años de experiencia.
 			</p>
 
 			<div class="flex flex-col sm:flex-row gap-6 justify-center mb-20">
-				<button
+				<a href={whatsappLink} target="_blank" rel="noopener noreferrer"
 					class="text-lg px-8 py-6 bg-white text-black hover:bg-white/90 rounded-full group transition-colors"
 				>
 					Inicia Tu Proceso
@@ -167,12 +172,13 @@ const forms = [
 							stroke-width="2"
 							d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
 					</svg>
-				</button>
-				<button
+				</a>
+				<a
+					href={whatsappLink} target="_blank" rel="noopener noreferrer"
 					class="text-lg px-8 py-6 border-2 border-white text-white hover:bg-white/10 rounded-full transition-colors"
 				>
 					Conoce Más
-				</button>
+				</a>
 			</div>
 
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
@@ -234,8 +240,8 @@ const forms = [
 			<div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
 				{[
 					{
-						title: 'Protección Legal',
-						description: 'Asesoría en VAWA, Visa U y protección humanitaria',
+						title: 'Formularios de Protección',
+						description: 'Llenado de formularios VAWA, Visa U y protección humanitaria',
 						color: 'from-[#87b8c6] to-[#2e707b]',
 						icon: 'shield'
 					},
@@ -422,8 +428,8 @@ const forms = [
 			<div class="max-w-7xl mx-auto">
 				{[
 					{
-						title: 'Consulta Inicial',
-						description: 'Analizamos tu caso y determinamos la mejor estrategia legal para ti',
+						title: 'Evaluación Inicial',
+						description: 'Revisamos tus documentos y te orientamos sobre el formulario que necesitas',
 						color: '#87b8c6',
 						icon: 'file'
 					},
@@ -658,7 +664,6 @@ const forms = [
 
 	<!-- Final CTA Section -->
 	<section class="relative bg-linear-to-br from-[#0f3f4c] via-primary to-secondary py-32 overflow-hidden">
-		<!-- Animated Background Elements -->
 		<div class="absolute inset-0 opacity-20">
 			<div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
 			<div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 1000ms;"></div>
@@ -672,30 +677,25 @@ const forms = [
 				<p class="text-2xl text-white/90 mb-12 leading-relaxed">
 					Tu futuro en Estados Unidos está más cerca de lo que piensas.
 					<br />
-					Agenda tu consulta gratuita hoy mismo.
+					Contáctanos hoy mismo.
 				</p>
 
 				<div class="flex flex-col sm:flex-row gap-6 justify-center mb-16">
 					<a
-						href="mailto:m-migration@outlook.com"
-						class="text-lg px-10 py-7 bg-white text-[#0f3f4c] hover:bg-white/90 rounded-full group font-bold transition-colors inline-block"
+						href={whatsappLink} target="_blank" rel="noopener noreferrer"
+						class="text-lg px-20 py-7 bg-white text-[#0f3f4c] hover:bg-white/90 rounded-full group font-bold transition-colors inline-block"
 					>
-						Consulta Gratuita
+						Contacto Gratuito
 						<svg class="inline-block ml-2 h-6 w-6 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
 						</svg>
 					</a>
-					<button
-						class="text-lg px-10 py-7 border-2 border-white text-white hover:bg-white/10 rounded-full transition-colors"
-					>
-						Ver Todos Los Formularios
-					</button>
 				</div>
 
 				<!-- Contact Info -->
 				<div class="flex flex-col md:flex-row gap-8 justify-center items-center">
 					<a
-						href="tel:+1234567890"
+						href={whatsappLink} target="_blank" rel="noopener noreferrer"
 						class="flex items-center gap-3 text-white hover:text-white/80 transition-colors group"
 					>
 						<div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -705,7 +705,11 @@ const forms = [
 						</div>
 						<div class="text-left">
 							<div class="text-sm text-white/70">Llámanos</div>
-							<div class="text-lg font-semibold">+1 (646) 427-2634</div>
+							<div class="text-lg font-semibold">
+								<a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+									+1 (646) 427-2634
+								</a>
+							</div>
 						</div>
 					</a>
 
@@ -720,7 +724,7 @@ const forms = [
 						</div>
 						<div class="text-left">
 							<div class="text-sm text-white/70">Escríbenos</div>
-							<div class="text-lg font-semibold">m-migration@outlook.com</div>
+							<a href="mailto:m-migration@outlook.com" class="text-lg font-semibold">m-migration@outlook.com</a>
 						</div>
 					</a>
 				</div>
