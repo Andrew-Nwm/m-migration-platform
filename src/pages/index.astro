@@ -2,40 +2,739 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { getCollection } from "astro:content";
+import "../styles/global.css";
 
+// contact-data
+const phone = "16464272634";
+const message = "Hola, estoy interesado en sus servicios de inmigración.";
+const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
-const forms = await getCollection("forms") ;
-export const prerender = true
-	
+const successStories = [
+	{
+		name: "María González",
+		country: "México",
+		visa: "Visa U - Aprobada",
+		quote: "Gracias a su apoyo profesional, pude obtener mi visa U. Ahora tengo la tranquilidad que buscaba para mi familia.",
+		image: "/first-woman.jpg"
+	},
+	{
+		name: "Carlos Hernández",
+		country: "Colombia",
+		visa: "I-765 Aprobado",
+		quote: "El proceso fue rápido y transparente. Ahora puedo trabajar legalmente y construir un mejor futuro.",
+		image: "/first-man.jpg"
+	},
+	{
+		name: "Ana Martínez",
+		country: "Venezuela",
+		visa: "VAWA - Aprobada",
+		quote: "Me ayudaron en el momento más difícil de mi vida. Estoy eternamente agradecida por su dedicación.",
+		image: "/second-woman.jpg"
+	},
+	{
+		name: "Luis Pérez",
+		country: "Honduras",
+		visa: "Visa T - Aprobada",
+		quote: "Profesionales comprometidos que realmente se preocupan por sus clientes. Recomendados al 100%.",
+		image: "/second-man.jpg"
+	},
+	{
+      name: 'Lucía Fernández',
+      country: 'Perú',
+      visa: 'Peticiones familiares',
+      image: '/third-woman.jpg',
+	quote: 'Reuní a mi familia después de años de separación. Siempre me mantuvieron informada en cada paso.',
+    }
+];
+
+const testimonials = [
+	{
+		name: "Roberto Sánchez",
+		role: "Ingeniero Civil - Cliente - Visa U",
+		text: "La mejor decisión que tomé fue confiar en M-Migration. Su equipo me guió en cada paso y ahora trabajo en mi campo profesional en Estados Unidos",
+		rating: 5,
+		image: "/third-man.jpg"
+	},
+	{
+		name: "Isabella Torres",
+		role: "Emprendedora - Cliente - Visa U",
+		text: "Gracias a su experiencia, pude traer a mi familia conmigo. El proceso fue claro y siempre estuvieron disponibles para responder mis dudas.",
+		rating: 5,
+		image: "/fourth-woman.jpg"
+	},
+	{
+		name: "Diego Morales",
+		role: "Chef - Cliente - VAWA",
+		text: "Después de años trabajando sin documentos, M-Migration me ayudó a regularizar mi situación. Ahora tengo mi propio restaurante.",
+		rating: 5,
+		image: "/fourth-man.jpg"
+	}
+];
+
+// Forms Data
+const forms = [
+	{
+		title: "Permiso de Trabajo",
+		description: "Formulario I-765",
+		href: "/forms/intake-765",
+		color: "from-[#87b8c6] to-[#2e707b]",
+		icon: "briefcase"
+	},
+	{
+		title: "Protección VAWA",
+		description: "Violencia Doméstica",
+		href: "/forms/intake-vawa",
+		color: "from-[#2e707b] to-[#0f3f4c]",
+		icon: "shield"
+	},
+	{
+		title: "Visa U",
+		description: "Víctimas de Crimen",
+		href: "/forms/intake-visa-u",
+		color: "from-[#0f3f4c] to-[#87b8c6]",
+		icon: "users"
+	},
+	{
+		title: "Asilo Político",
+		description: "Formulario I-589",
+		href: "/forms/intake-i589",
+		color: "from-[#87b8c6] to-[#2e707b]",
+		icon: "home"
+	},
+	{
+		title: "Visa T",
+		description: "Víctimas de Trata",
+		href: "/forms/intake-visa-t",
+		color: "from-[#2e707b] to-[#0f3f4c]",
+		icon: "file"
+	},
+	{
+		title: "SIJ",
+		description: "Inmigrante Juvenil Especial",
+		href: "/forms/intake-sij",
+		color: "from-[#0f3f4c] to-[#87b8c6]",
+		icon: "help"
+	}
+];
 ---
 
 <Layout
-	title="Inicio - Formularios de Migración"
-	description="Sistema de formularios para procesos migratorios"
+	title="M-Migration LLC - Especialistas en Llenado de Formularios Migratorios"
+	description="Nos dedicamos a procesos migratorios. Servicio profesional de llenado de formularios para VAWA, Visa U, Visa T, permisos de trabajo y más. Tu camino hacia el sueño americano empieza aquí."
 >
 	<Header slot="header" />
-	
-	
 
-	<section class="bg-slate-50">
-		<div class="container mx-auto px-6 py-12">
-			
-			<div class="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-				{forms.map((form) => (
-					<article class="group h-full rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm transition hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg">
-						<a href={`formularios/${form.slug}/`} class="flex h-full flex-col gap-4">
-							
-								<h3 class="text-lg font-semibold text-slate-900 group-hover:text-sky-700">
-									{form.data.title ?? form.slug}
-								</h3>
-							
-						</a>
-					</article>
+	<!-- Hero Section -->
+	<section id="hero-section" class="relative min-h-screen bg-black flex items-center justify-center overflow-hidden">
+		<div class="absolute inset-0 z-0 opacity-30">
+			<div
+				class="w-full h-full bg-cover bg-center opacity-30"
+				style="background-image: url('/aerial-view-of-statue-of-liberty-new-york-city-sky.jpg');"
+			>
+			</div>
+		</div>
+
+		<!-- Content -->
+		<div class="relative z-50 text-center px-4 max-w-6xl mx-auto py-12">
+			<h1
+				class="text-6xl md:text-8xl lg:text-9xl font-bold text-white mb-8 leading-none tracking-tight"
+			>
+				Tu Nuevo
+				<br />
+				<span
+					class="text-transparent bg-clip-text bg-linear-to-r from-secondary via-primary to-[#0f3f4c]"
+				>
+					Comienzo
+				</span>
+			</h1>
+
+			<p
+				class="text-xl md:text-2xl text-white/90 mb-12 font-light max-w-3xl mx-auto"
+			>
+				Transformamos sueños en realidad. Especialistas en llenado de formularios con más de
+				15 años de experiencia.
+			</p>
+
+			<div class="flex flex-col sm:flex-row gap-6 justify-center mb-20">
+				<a href={whatsappLink} target="_blank" rel="noopener noreferrer"
+					class="text-lg px-8 py-6 bg-white text-black hover:bg-white/90 rounded-full group transition-colors"
+				>
+					Inicia Tu Proceso
+					<svg
+						class="inline-block ml-2 h-5 w-5 transition-transform group-hover:translate-x-2"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+					</svg>
+				</a>
+				<a
+					href={whatsappLink} target="_blank" rel="noopener noreferrer"
+					class="text-lg px-8 py-6 border-2 border-white text-white hover:bg-white/10 rounded-full transition-colors"
+				>
+					Conoce Más
+				</a>
+			</div>
+
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+				{
+					[
+						{ value: "500+", label: "Casos Exitosos" },
+						{ value: "98%", label: "Aprobación" },
+						{ value: "15+", label: "Años" },
+						{ value: "24/7", label: "Soporte" },
+					].map((stat) => (
+						<div class="stat-card group text-center p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 relative overflow-hidden cursor-pointer">
+							<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+								<div class="wave-effect"></div>
+							</div>
+							<div class="relative z-10">
+								<div class="stat-value text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">
+									{stat.value}
+								</div>
+								<div class="text-sm text-white/70 group-hover:text-white/90 transition-colors">{stat.label}</div>
+							</div>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<!-- Servicios Section -->
+	<section id="services-section" class="relative bg-black py-20 overflow-hidden">
+		<!-- Animated Background Grid -->
+		<div class="absolute inset-0 opacity-20">
+			<div
+				id="grid-background"
+				class="absolute inset-0"
+				style="background-image: linear-gradient(to right, rgba(135, 184, 198, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(135, 184, 198, 0.1) 1px, transparent 1px); background-size: 60px 60px;"
+			>
+			</div>
+		</div>
+
+		<div class="container mx-auto px-4 relative z-10">
+			<div class="text-center mb-20">
+				<h2
+					id="services-title"
+					class="text-5xl md:text-7xl font-bold text-white mb-6"
+				>
+					Servicios de
+					<span class="text-transparent bg-clip-text bg-linear-to-r from-secondary to-[#0f3f4c]">
+						{' '}Excelencia
+					</span>
+				</h2>
+				<p
+					id="services-subtitle"
+					class="text-xl text-white/70 max-w-3xl mx-auto"
+				>
+					Cada caso es único. Ofrecemos soluciones personalizadas con el más alto nivel de profesionalismo.
+				</p>
+			</div>
+
+			<div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+				{[
+					{
+						title: 'Formularios de Protección',
+						description: 'Llenado de formularios VAWA, Visa U y protección humanitaria',
+						color: 'from-[#87b8c6] to-[#2e707b]',
+						icon: 'shield'
+					},
+					{
+						title: 'Reunificación Familiar',
+						description: 'Ayudamos a reunir a familias separadas por fronteras',
+						color: 'from-[#2e707b] to-[#0f3f4c]',
+						icon: 'users'
+					},
+					{
+						title: 'Permisos de Trabajo',
+						description: 'Tramitación eficiente de formularios I-765 y autorizaciones',
+						color: 'from-[#0f3f4c] to-[#87b8c6]',
+						icon: 'award'
+					},
+					{
+						title: 'Proceso Acelerado',
+						description: 'Reducimos tiempos de espera con gestión profesional',
+						color: 'from-[#87b8c6] to-[#0f3f4c]',
+						icon: 'clock'
+					},
+				].map((service, idx) => (
+					<div
+						class="service-card group relative animate-pulse h-full"
+						data-index={idx}
+					>
+						<div class="relative p-8 rounded-3xl bg-linear-to-br from-white/5 to-white/2 backdrop-blur-xl border border-white/10 overflow-hidden transition-all duration-500 hover:border-white/30 hover:shadow-2xl hover:shadow-secondary/20">
+							<div
+								class={`absolute -top-20 -right-20 w-40 h-40 rounded-full bg-linear-to-br ${service.color} opacity-20 blur-3xl transition-all duration-500 group-hover:scale-150`}
+							/>
+
+							<div class="relative z-10">
+								<div class={`inline-flex p-4 rounded-2xl bg-linear-to-br ${service.color} mb-6`}>
+									{service.icon === 'shield' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+										</svg>
+									)}
+									{service.icon === 'users' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+										</svg>
+									)}
+									{service.icon === 'award' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+										</svg>
+									)}
+									{service.icon === 'clock' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+										</svg>
+									)}
+								</div>
+
+								<h3 class="text-2xl font-bold text-white mb-4">{service.title}</h3>
+								<p class="text-white/70 leading-relaxed">{service.description}</p>
+							</div>
+						</div>
+					</div>
 				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Video Transition Section -->
+	<section id="video-section" class="hidden md:block relative h-[150vh] bg-black">
+		<div class="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
+			<div
+				id="video-wrapper"
+				class="relative w-full max-w-7xl mx-4 rounded-3xl overflow-hidden"
+			>
+				<div class="relative aspect-video">
+					<video
+						id="story-video"
+						class="w-full h-full object-cover"
+						autoplay
+						loop
+						muted
+					>
+						<source src="videos/migration-process.mp4" type="video/mp4" />
+					</video>
+				</div>
+
+				<div class="absolute bottom-0 left-0 right-0 p-12 bg-linear-to-t from-black to-transparent">
+					<h3 class="text-4xl md:text-5xl font-bold text-white mb-4">
+						Tu Historia Empieza Aquí
+					</h3>
+					<p class="text-xl text-white/80">
+						Mira cómo transformamos vidas cada día
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Horizontal Carousel Section -->
+	<section class="relative bg-linear-to-b from-black via-[#0f3f4c]/20 to-black py-32 overflow-hidden">
+		<div class="container mx-auto px-4 mb-12">
+			<div class="flex items-center justify-between mb-8">
+				<div>
+					<h2 class="text-5xl md:text-7xl font-bold text-white mb-4">
+						Historias de Éxito
+					</h2>
+					<p class="text-xl text-white/70">
+						Conoce a quienes ya lograron su sueño americano
+					</p>
+				</div>
+
+				<div class="hidden md:flex gap-4">
+					<button
+						id="scroll-left"
+						class="rounded-full w-12 h-12 border-2 border-white/20 text-white hover:bg-white/10 disabled:opacity-30 flex items-center justify-center transition-colors"
+					>
+						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+						</svg>
+					</button>
+					<button
+						id="scroll-right"
+						class="rounded-full w-12 h-12 border-2 border-white/20 text-white hover:bg-white/10 disabled:opacity-30 flex items-center justify-center transition-colors"
+					>
+						<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+						</svg>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div
+			id="stories-scroll"
+			class="flex gap-8 px-4 overflow-x-auto snap-x snap-mandatory"
+			style="scrollbar-width: none; -ms-overflow-style: none;"
+		>
+			<div class="w-20 shrink-0"></div>
+			{successStories.map((story) => (
+				<div class="shrink-0 w-[85vw] md:w-[600px] snap-center group">
+					<div class="relative h-[500px] rounded-3xl overflow-hidden">
+						<img
+							src={story.image}
+							alt={story.name}
+							class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+						/>
+						<div class="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent"></div>
+
+						<div class="absolute bottom-0 left-0 right-0 p-8">
+							<div class="inline-block px-4 py-2 rounded-full bg-linear-to-r from-secondary to-primary text-white text-sm font-semibold mb-4">
+								{story.visa}
+							</div>
+							<p class="text-white/90 text-lg mb-6 leading-relaxed italic">
+								"{story.quote}"
+							</p>
+							<div>
+								<div class="text-white font-bold text-xl">{story.name}</div>
+								<div class="text-white/70">{story.country}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			))}
+			<div class="w-20 shrink-0"></div>
+		</div>
+
+		<style>
+			#stories-scroll::-webkit-scrollbar {
+				display: none;
+			}
+		</style>
+	</section>
+
+	<!-- Process Reveal Section -->
+	<section id="process-section" class="relative bg-black py-32 overflow-hidden">
+		<div class="container mx-auto px-4">
+			<div class="text-center mb-20">
+				<h2 class="text-5xl md:text-7xl font-bold text-white mb-6">
+					Nuestro Proceso
+				</h2>
+				<p class="text-xl text-white/70 max-w-3xl mx-auto">
+					Simple, transparente y diseñado para tu tranquilidad
+				</p>
+			</div>
+
+			<div class="max-w-7xl mx-auto">
+				{[
+					{
+						title: 'Evaluación Inicial',
+						description: 'Revisamos tus documentos y te orientamos sobre el formulario que necesitas',
+						color: '#87b8c6',
+						icon: 'file'
+					},
+					{
+						title: 'Preparación',
+						description: 'Recopilamos documentos y preparamos tu expediente con atención al detalle',
+						color: '#2e707b',
+						icon: 'user'
+					},
+					{
+						title: 'Presentación',
+						description: 'Enviamos tu solicitud y hacemos seguimiento constante del proceso',
+						color: '#0f3f4c',
+						icon: 'clock'
+					},
+					{
+						title: 'Aprobación',
+						description: 'Celebramos juntos cuando recibes la respuesta positiva',
+						color: '#87b8c6',
+						icon: 'check'
+					},
+				].map((step, idx) => (
+					<div class="relative process-step" data-index={idx}>
+						<div class="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-12 md:mb-16">
+							<!-- Number and Icon -->
+							<div class="shrink-0 relative step-icon">
+								<div
+									class="w-20 h-20 md:w-32 md:h-32 rounded-full flex items-center justify-center relative"
+									style={`background: linear-gradient(135deg, ${step.color}, ${step.color}dd);`}
+								>
+									{step.icon === 'file' && (
+										<svg class="w-8 h-8 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+										</svg>
+									)}
+									{step.icon === 'user' && (
+										<svg class="w-8 h-8 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+										</svg>
+									)}
+									{step.icon === 'clock' && (
+										<svg class="w-8 h-8 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+										</svg>
+									)}
+									{step.icon === 'check' && (
+										<svg class="w-8 h-8 md:w-12 md:h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+										</svg>
+									)}
+									<div
+										class="absolute -bottom-1 -right-1 md:-bottom-2 md:-right-2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-white flex items-center justify-center font-bold text-sm md:text-xl"
+										style={`color: ${step.color};`}
+									>
+										{idx + 1}
+									</div>
+								</div>
+							</div>
+
+							<!-- Content -->
+							<div class="flex-1 step-content">
+								<h3 class="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-4">{step.title}</h3>
+								<p class="text-base md:text-xl text-white/70 max-w-2xl leading-relaxed">
+									{step.description}
+								</p>
+							</div>
+						</div>
+
+						<!-- Connecting Line -->
+						{idx < 3 && (
+							<div class="hidden md:block absolute left-16 top-32 w-0.5 h-16 bg-white/10 overflow-hidden">
+								<div
+									class="w-full bg-linear-to-b from-secondary to-primary h-full origin-top step-line"
+								>
+								</div>
+							</div>
+						)}
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Parallax Testimonials Section -->
+	<section id="testimonials-section" class="relative bg-linear-to-b from-black to-[#0f3f4c]/30 py-32 overflow-hidden">
+		<!-- Animated Background -->
+		<div class="absolute inset-0">
+			<div
+				id="testimonials-bg"
+				class="absolute inset-0 opacity-10"
+				style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"
+			>
+			</div>
+		</div>
+
+		<div class="container mx-auto px-4 relative z-10">
+			<div class="text-center mb-20">
+				<h2 class="text-5xl md:text-7xl font-bold text-white mb-6">
+					Lo Que Dicen
+					<br />
+					<span class="text-transparent bg-clip-text bg-linear-to-r from-secondary to-primary">
+						Nuestros Clientes
+					</span>
+				</h2>
+			</div>
+
+			<div class="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+				{testimonials.map((testimonial, idx) => (
+					<div class="testimonial-card" data-index={idx}>
+						<div class="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 group">
+							<!-- Quote Mark -->
+							<div class="text-8xl text-secondary/20 font-serif absolute top-4 left-4">
+								"
+							</div>
+
+							<div class="relative z-10 pt-8">
+								<!-- Stars -->
+								<div class="flex gap-1 mb-6">
+									{[...Array(testimonial.rating)].map(() => (
+										<svg class="w-5 h-5 fill-secondary text-secondary" viewBox="0 0 24 24" fill="currentColor">
+											<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+										</svg>
+									))}
+								</div>
+
+								<!-- Testimonial Text -->
+								<p class="text-white/90 text-lg leading-relaxed mb-8">
+									{testimonial.text}
+								</p>
+
+								<!-- Author -->
+								<div class="flex items-center gap-4">
+									<img
+										src={testimonial.image}
+										alt={testimonial.name}
+										class="w-14 h-14 rounded-full object-cover border-2 border-secondary"
+									/>
+									<div>
+										<div class="text-white font-bold">{testimonial.name}</div>
+										<div class="text-white/60 text-sm">{testimonial.role}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Forms Showcase Section -->
+	<section id="forms-section" class="relative bg-black py-32 overflow-hidden">
+		<!-- Animated Gradient Background -->
+		<div class="absolute inset-0">
+			<div
+				id="forms-gradient-bg"
+				class="absolute inset-0 opacity-30"
+			>
+			</div>
+		</div>
+
+		<div class="container mx-auto px-4 relative z-10">
+			<div class="text-center mb-20">
+				<h2 class="text-5xl md:text-7xl font-bold text-white mb-6">
+					Comienza Tu Proceso
+				</h2>
+				<p class="text-xl text-white/70 max-w-3xl mx-auto">
+					Llena el formulario que aplique a tu caso y nos pondremos en contacto contigo
+				</p>
+			</div>
+
+			<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+				{forms.map((form, idx) => (
+					<a
+						href={form.href}
+						class="form-card group"
+						data-index={idx}
+					>
+						<div class="relative h-64 rounded-3xl overflow-hidden transition-all duration-500 group-hover:scale-105">
+							<div class={`absolute inset-0 bg-linear-to-br ${form.color} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
+
+							<div class="relative z-10 h-full flex flex-col items-center justify-center p-8 text-center">
+								<div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+									{form.icon === 'briefcase' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+										</svg>
+									)}
+									{form.icon === 'shield' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+										</svg>
+									)}
+									{form.icon === 'users' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+										</svg>
+									)}
+									{form.icon === 'home' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+										</svg>
+									)}
+									{form.icon === 'file' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+										</svg>
+									)}
+									{form.icon === 'help' && (
+										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+										</svg>
+									)}
+								</div>
+
+								<h3 class="text-2xl font-bold text-white mb-2">{form.title}</h3>
+								<p class="text-white/80 mb-6">{form.description}</p>
+
+								<div class="inline-flex items-center gap-2 text-white font-semibold group-hover:gap-4 transition-all">
+									Llenar formulario
+									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+									</svg>
+								</div>
+							</div>
+						</div>
+					</a>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Final CTA Section -->
+	<section class="relative bg-linear-to-br from-[#0f3f4c] via-primary to-secondary py-32 overflow-hidden">
+		<div class="absolute inset-0 opacity-20">
+			<div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
+			<div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 1000ms;"></div>
+		</div>
+
+		<div class="container mx-auto px-4 relative z-10">
+			<div class="max-w-4xl mx-auto text-center">
+				<h2 class="text-5xl md:text-7xl font-bold text-white mb-8">
+					¿Listo Para Comenzar?
+				</h2>
+				<p class="text-2xl text-white/90 mb-12 leading-relaxed">
+					Tu futuro en Estados Unidos está más cerca de lo que piensas.
+					<br />
+					Contáctanos hoy mismo.
+				</p>
+
+				<div class="flex flex-col sm:flex-row gap-6 justify-center mb-16">
+					<a
+						href={whatsappLink} target="_blank" rel="noopener noreferrer"
+						class="text-lg px-20 py-7 bg-white text-[#0f3f4c] hover:bg-white/90 rounded-full group font-bold transition-colors inline-block"
+					>
+						Contacto Gratuito
+						<svg class="inline-block ml-2 h-6 w-6 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+						</svg>
+					</a>
+				</div>
+
+				<!-- Contact Info -->
+				<div class="flex flex-col md:flex-row gap-8 justify-center items-center">
+					<a
+						href={whatsappLink} target="_blank" rel="noopener noreferrer"
+						class="flex items-center gap-3 text-white hover:text-white/80 transition-colors group"
+					>
+						<div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+							</svg>
+						</div>
+						<div class="text-left">
+							<div class="text-sm text-white/70">Llámanos</div>
+							<div class="text-lg font-semibold">
+								<a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+									+1 (646) 427-2634
+								</a>
+							</div>
+						</div>
+					</a>
+
+					<a
+						href="mailto:m-migration@outlook.com"
+						class="flex items-center gap-3 text-white hover:text-white/80 transition-colors group"
+					>
+						<div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+							</svg>
+						</div>
+						<div class="text-left">
+							<div class="text-sm text-white/70">Escríbenos</div>
+							<a href="mailto:m-migration@outlook.com" class="text-lg font-semibold">m-migration@outlook.com</a>
+						</div>
+					</a>
+				</div>
 			</div>
 		</div>
 	</section>
 
 	<Footer slot="footer" />
 </Layout>
+
+<script>
+	import '../lib/home-animations.ts';
+</script>

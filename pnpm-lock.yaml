@@ -8,12 +8,24 @@ importers:
 
   .:
     dependencies:
+      '@lucide/astro':
+        specifier: ^0.554.0
+        version: 0.554.0(astro@5.15.8(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.2)(typescript@5.9.3))
+      '@midudev/tailwind-animations':
+        specifier: ^0.2.0
+        version: 0.2.0(tailwindcss@4.1.17)
       '@tailwindcss/vite':
         specifier: ^4.1.17
         version: 4.1.17(vite@6.4.1(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2))
       astro:
         specifier: ^5.15.8
         version: 5.15.8(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.2)(typescript@5.9.3)
+      lucide-react:
+        specifier: ^0.554.0
+        version: 0.554.0(react@19.2.0)
+      simple-icons-astro:
+        specifier: ^15.21.0
+        version: 15.21.0(astro@5.15.8(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.2)(typescript@5.9.3))
       tailwindcss:
         specifier: ^4.1.17
         version: 4.1.17
@@ -369,6 +381,16 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@lucide/astro@0.554.0':
+    resolution: {integrity: sha512-OKDxbkluX4+keoX2mwORwhGEyqbSyLb1kwmaAx9KpknCFJihTzKWxw7qJ00wdlwRC3TDa+c4HbTG68Cb0R5IbQ==}
+    peerDependencies:
+      astro: ^4 || ^5
+
+  '@midudev/tailwind-animations@0.2.0':
+    resolution: {integrity: sha512-4mktb060dA7SZz0LjMfhBT30HWPmQENwF4AJC7/etESWohe4pukST0ohC2yAePS5GNinhY3MXmZZ8//2ywafOQ==}
+    peerDependencies:
+      tailwindcss: ^3.0.0 || ^4.0.0
 
   '@oslojs/encoding@1.1.0':
     resolution: {integrity: sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==}
@@ -1043,6 +1065,11 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
+  lucide-react@0.554.0:
+    resolution: {integrity: sha512-St+z29uthEJVx0Is7ellNkgTEhaeSoA42I7JjOCBCrc5X6LYMGSv0P/2uS5HDLTExP5tpiqRD2PyUEOS6s9UXA==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
@@ -1275,6 +1302,10 @@ packages:
   radix3@1.1.2:
     resolution: {integrity: sha512-b484I/7b8rDEdSDKckSSBA8knMpcdsXudlE/LNL639wFoHKwLbEkQFZHWEYwDC0wa0FKUcCY+GAF73Z7wxNVFA==}
 
+  react@19.2.0:
+    resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
+    engines: {node: '>=0.10.0'}
+
   readdirp@4.1.2:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
     engines: {node: '>= 14.18.0'}
@@ -1347,6 +1378,11 @@ packages:
 
   shiki@3.15.0:
     resolution: {integrity: sha512-kLdkY6iV3dYbtPwS9KXU7mjfmDm25f5m0IPNFnaXO7TBPcvbUOY72PYXSuSqDzwp+vlH/d7MXpHlKO/x+QoLXw==}
+
+  simple-icons-astro@15.21.0:
+    resolution: {integrity: sha512-+M5CObJKT7t2EtmW7SgHQSUjwUsgvcLiijzhh0fkHAxRBL4eszNDbfsytjN79ofas0vQogriwwPzGvyvOBye9w==}
+    peerDependencies:
+      astro: '>=2.7.1'
 
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
@@ -1911,6 +1947,14 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@lucide/astro@0.554.0(astro@5.15.8(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.2)(typescript@5.9.3))':
+    dependencies:
+      astro: 5.15.8(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.2)(typescript@5.9.3)
+
+  '@midudev/tailwind-animations@0.2.0(tailwindcss@4.1.17)':
+    dependencies:
+      tailwindcss: 4.1.17
 
   '@oslojs/encoding@1.1.0': {}
 
@@ -2621,6 +2665,10 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
+  lucide-react@0.554.0(react@19.2.0):
+    dependencies:
+      react: 19.2.0
+
   magic-string@0.30.21:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -3033,6 +3081,8 @@ snapshots:
 
   radix3@1.1.2: {}
 
+  react@19.2.0: {}
+
   readdirp@4.1.2: {}
 
   regex-recursion@6.0.2:
@@ -3210,6 +3260,10 @@ snapshots:
       '@shikijs/types': 3.15.0
       '@shikijs/vscode-textmate': 10.0.2
       '@types/hast': 3.0.4
+
+  simple-icons-astro@15.21.0(astro@5.15.8(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.2)(typescript@5.9.3)):
+    dependencies:
+      astro: 5.15.8(@types/node@24.10.1)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.53.2)(typescript@5.9.3)
 
   sisteransi@1.0.5: {}
 
