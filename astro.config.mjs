@@ -1,10 +1,17 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
+	// output: 'server',
 	vite: {
 		plugins: [tailwindcss()],
 	},
+
+	env: {
+		schema: {
+			SEND_DATA_FORM: envField.string({context: 'server', access:'secret' }) 
+		}
+	}
 });

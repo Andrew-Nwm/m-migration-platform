@@ -1,0 +1,157 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+	form: CollectionEntry<"forms">;
+}
+
+const { form } = Astro.props as Props;
+const { data } = form;
+
+const baseLabelClass =
+	"flex items-center gap-2 text-sm font-semibold text-slate-800";
+const baseInputClass =
+	"w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-900 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-100";
+const helperTextClass = "text-xs text-slate-500";
+
+const isCheckGroup = (type: string) =>
+	type === "checkbox_group" || type === "checkbox";
+
+const allowedInputTypes = ["text", "email", "tel", "date", "number"] as const;
+type InputType = (typeof allowedInputTypes)[number];
+const isValidInputType = (value: string): value is InputType =>
+	allowedInputTypes.includes(value as InputType);
+const resolveInputType = (value: string): InputType =>
+	isValidInputType(value) ? value : "text";
+
+const actionUrl = `/api/forms/${form.slug}`;
+---
+
+<form method="post" action={actionUrl} class="space-y-6">
+	{data?.fields?.map((field) => (
+		<div class="space-y-2">
+			<label class={baseLabelClass} for={field.name}>
+				{field.label}
+				{field.required && <span class="text-sky-600">*</span>}
+			</label>
+
+			{(() => {
+				switch (field.type) {
+					case "textarea":
+						return (
+							<textarea
+								id={field.name}
+								name={field.name}
+								required={field.required}
+								placeholder={field.placeholder}
+								class={`${baseInputClass} min-h-[140px] resize-y`}
+							/>
+						);
+					case "select":
+						return (
+							<select
+								id={field.name}
+								name={field.name}
+								required={field.required}
+								class={baseInputClass}
+							>
+								<option value="">Seleccione una opción</option>
+								{field.options?.map((option) => (
+									<option value={option}>{option}</option>
+								))}
+							</select>
+						);
+					case "radio":
+						return (
+							<div class="space-y-2">
+								{field.options?.map((option) => {
+									const optionId = `${field.name}-${option}`;
+									return (
+										<label
+											for={optionId}
+											class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm"
+										>
+											<input
+												type="radio"
+												id={optionId}
+												name={field.name}
+												value={option}
+												required={field.required}
+												class="h-4 w-4 border-slate-300 text-sky-600 focus:ring-sky-500"
+											/>
+											{option}
+										</label>
+									);
+								})}
+							</div>
+						);
+					case "checkbox":
+					case "checkbox_group":
+						return (
+							<div class="space-y-2">
+								{field.options ? (
+									field.options.map((option) => {
+										const optionId = `${field.name}-${option}`;
+										return (
+											<label
+												for={optionId}
+												class="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm"
+											>
+												<input
+													type="checkbox"
+													id={optionId}
+													name={
+														field.type === "checkbox_group"
+															? `${field.name}[]`
+															: field.name
+													}
+													value={option}
+													required={field.required && !field.options}
+													class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+												/>
+												{option}
+											</label>
+										);
+									})
+								) : (
+									<label class="flex items-center gap-3 text-sm font-medium text-slate-700">
+										<input
+											type="checkbox"
+											id={field.name}
+											name={field.name}
+											required={field.required}
+											class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+										/>
+										{field.placeholder ?? "Confirmar"}
+									</label>
+								)}
+							</div>
+						);
+					default:
+						return (
+							<input
+								type={resolveInputType(field.type)}
+								id={field.name}
+								name={field.name}
+								required={field.required}
+								placeholder={field.placeholder}
+								class={baseInputClass}
+							/>
+						);
+				}
+			})()}
+
+			{field.placeholder && !isCheckGroup(field.type) && field.type !== "radio" && (
+				<p class={helperTextClass}>{field.placeholder}</p>
+			)}
+		</div>
+	))}
+
+	<button
+		type="submit"
+		class="w-full rounded-2xl bg-sky-600 px-5 py-3 text-base font-semibold text-white shadow-lg transition hover:bg-sky-700"
+	>
+		Enviar formulario
+	</button>
+</form>
+
