@@ -1,0 +1,642 @@
+---
+import FileUpload from "./FileUpload.astro";
+
+interface Props {
+	fields: Array<{
+		name: string;
+		label: string;
+		type: string;
+		required?: boolean;
+		placeholder?: string;
+		options?: string[];
+		validation?: {
+			minLength?: number;
+			maxLength?: number;
+			pattern?: string;
+			min?: number;
+			max?: number;
+		};
+	}>;
+	formId: string;
+	requiredFiles?: string[];
+}
+
+const { fields, formId, requiredFiles } = Astro.props;
+---
+
+<section class="relative bg-black py-20">
+	<div class="container mx-auto px-4 max-w-4xl">
+		<div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12">
+			<form
+				method="POST"
+				action={`/api/forms/${formId}`}
+				class="space-y-8"
+				id="dynamic-form"
+				enctype="multipart/form-data"
+			>
+				{fields.map((field) => {
+					const fieldId = field.name;
+					const isRequired = field.required || false;
+					const validation = field.validation || {};
+					
+					return (
+						<div class="form-field">
+							<label
+								for={fieldId}
+								class="block text-white font-semibold mb-3 text-lg"
+							>
+								{field.label}
+								{isRequired && (
+									<span class="text-secondary ml-1">*</span>
+								)}
+							</label>
+							
+							{field.type === 'text' || field.type === 'email' || field.type === 'tel' || field.type === 'number' ? (
+								<input
+									type={field.type}
+									id={fieldId}
+									name={fieldId}
+									required={isRequired}
+									placeholder={field.placeholder || ''}
+									minlength={validation.minLength}
+									maxlength={validation.maxLength}
+									pattern={validation.pattern}
+									min={validation.min}
+									max={validation.max}
+									class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+								/>
+							) : field.type === 'date' ? (
+								<input
+									type="date"
+									id={fieldId}
+									name={fieldId}
+									required={isRequired}
+									placeholder={field.placeholder || ''}
+									class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+								/>
+							) : field.type === 'textarea' ? (
+								<textarea
+									id={fieldId}
+									name={fieldId}
+									required={isRequired}
+									placeholder={field.placeholder || ''}
+									rows={4}
+									minlength={validation.minLength}
+									maxlength={validation.maxLength}
+									class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all resize-y"
+								></textarea>
+							) : field.type === 'select' ? (
+								<select
+									id={fieldId}
+									name={fieldId}
+									required={isRequired}
+									class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+								>
+									<option value="" class="bg-[#0f3f4c] text-white">
+										Seleccione una opción
+									</option>
+									{field.options?.map((option) => (
+										<option value={option} class="bg-[#0f3f4c] text-white">
+											{option.charAt(0).toUpperCase() + option.slice(1)}
+										</option>
+									))}
+								</select>
+							) : field.type === 'checkbox' ? (
+								<div class="flex items-center">
+									<input
+										type="checkbox"
+										id={fieldId}
+										name={fieldId}
+										required={isRequired}
+										class="w-5 h-5 rounded border-white/20 bg-white/10 text-secondary focus:ring-2 focus:ring-secondary focus:ring-offset-0 cursor-pointer"
+									/>
+								</div>
+							) : field.type === 'checkbox_group' ? (
+								<div class="space-y-3">
+									{field.options?.map((option, idx) => (
+										<label class="flex items-center gap-3 cursor-pointer group">
+											<input
+												type="checkbox"
+												name={fieldId}
+												value={option}
+												required={isRequired && idx === 0}
+												class="w-5 h-5 rounded border-white/20 bg-white/10 text-secondary focus:ring-2 focus:ring-secondary focus:ring-offset-0 cursor-pointer"
+											/>
+											<span class="text-white/90 group-hover:text-white transition-colors">
+												{option.charAt(0).toUpperCase() + option.slice(1).replace(/([A-Z])/g, ' $1')}
+											</span>
+										</label>
+									))}
+								</div>
+							) : field.type === 'radio' ? (
+								<div class="space-y-3">
+									{field.options?.map((option) => (
+										<label class="flex items-center gap-3 cursor-pointer group">
+											<input
+												type="radio"
+												name={fieldId}
+												value={option}
+												required={isRequired}
+												class="w-5 h-5 border-white/20 bg-white/10 text-secondary focus:ring-2 focus:ring-secondary focus:ring-offset-0 cursor-pointer"
+											/>
+											<span class="text-white/90 group-hover:text-white transition-colors">
+												{option.charAt(0).toUpperCase() + option.slice(1)}
+											</span>
+										</label>
+									))}
+								</div>
+							) : (
+								<input
+									type="text"
+									id={fieldId}
+									name={fieldId}
+									required={isRequired}
+									placeholder={field.placeholder || ''}
+									class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all"
+								/>
+							)}
+						</div>
+					);
+				})}
+
+				<!-- File Upload Section -->
+				<FileUpload requiredFiles={requiredFiles} />
+
+				<!-- Aceptación de tratamiento de datos -->
+				<div class="form-field border-t border-white/10 pt-8">
+					<div class="bg-white/5 rounded-2xl p-6 border border-white/10">
+						<div class="flex items-start gap-4">
+							<input
+								type="checkbox"
+								id="acceptDataTreatment"
+								name="acceptDataTreatment"
+								required
+								class="w-6 h-6 mt-1 rounded border-white/20 bg-white/10 text-secondary focus:ring-2 focus:ring-secondary focus:ring-offset-0 cursor-pointer shrink-0"
+							/>
+							<div class="flex-1">
+								<label for="acceptDataTreatment" class="text-white font-semibold cursor-pointer">
+									Acepto el tratamiento de mis datos personales
+									<span class="text-secondary ml-1">*</span>
+								</label>
+								<button
+									type="button"
+									id="togglePrivacyDetails"
+									class="block text-secondary hover:text-secondary/80 text-sm mt-2 underline transition-colors"
+								>
+									Ver más información
+								</button>
+								<div id="privacyDetails" class="hidden mt-4 text-white/70 text-sm leading-relaxed space-y-3 border-t border-white/10 pt-4">
+									<p>
+										<strong class="text-white">Responsable del tratamiento:</strong> M-Migration LLC
+									</p>
+									<p>
+										<strong class="text-white">Finalidad:</strong> Los datos personales proporcionados serán utilizados exclusivamente para:
+									</p>
+									<ul class="list-disc list-inside ml-4 space-y-1">
+										<li>Gestionar y procesar su solicitud de servicios migratorios</li>
+										<li>Comunicarnos con usted sobre el estado de su caso</li>
+										<li>Preparar y completar los formularios migratorios correspondientes</li>
+										<li>Almacenar su expediente de forma segura para futuras consultas</li>
+									</ul>
+									<p>
+										<strong class="text-white">Conservación:</strong> Sus datos serán conservados mientras dure la relación de servicio y durante el tiempo necesario para cumplir con obligaciones legales.
+									</p>
+									<p>
+										<strong class="text-white">Derechos:</strong> Usted puede ejercer sus derechos de acceso, rectificación, supresión, limitación, portabilidad y oposición enviando un correo a <a href="mailto:m-migration@outlook.com" class="text-secondary hover:underline">m-migration@outlook.com</a>.
+									</p>
+									<p>
+										<strong class="text-white">Seguridad:</strong> Implementamos medidas de seguridad técnicas y organizativas para proteger sus datos contra acceso no autorizado, pérdida o destrucción.
+									</p>
+									<p class="text-white/50 italic">
+										Al marcar esta casilla, confirmo que he leído y acepto la política de tratamiento de datos. Entiendo que sin mi consentimiento no será posible procesar mi solicitud.
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="pt-6">
+					<button
+						type="submit"
+						id="submitButton"
+						disabled
+						class="w-full md:w-auto px-12 py-4 bg-linear-to-r from-secondary to-primary text-white font-bold rounded-full hover:opacity-90 transition-opacity text-lg shadow-lg shadow-secondary/30 disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						Enviar Formulario
+					</button>
+					<p id="acceptanceWarning" class="text-yellow-400/80 text-sm mt-3">
+						⚠️ Debe aceptar el tratamiento de datos para enviar el formulario
+					</p>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+<!-- Modal de Éxito -->
+<div id="successModal" class="fixed inset-0 z-50 hidden">
+	<!-- Overlay -->
+	<div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="modalOverlay"></div>
+	
+	<!-- Modal Content -->
+	<div class="relative min-h-screen flex items-center justify-center p-4">
+		<div class="bg-gradient-to-br from-[#0f3f4c] to-black border border-white/20 rounded-3xl p-8 md:p-12 max-w-lg w-full shadow-2xl transform transition-all">
+			<!-- Icono de éxito -->
+			<div class="flex justify-center mb-6">
+				<div class="w-20 h-20 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center animate-bounce">
+					<svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+					</svg>
+				</div>
+			</div>
+			
+			<!-- Título -->
+			<h3 class="text-3xl font-bold text-white text-center mb-4">
+				¡Formulario Enviado!
+			</h3>
+			
+			<!-- Mensaje -->
+			<p class="text-white/80 text-center mb-6 leading-relaxed">
+				Hemos recibido su información correctamente. Nuestro equipo revisará su caso y se pondrá en contacto con usted a la brevedad.
+			</p>
+			
+			<!-- Info adicional -->
+			<div class="bg-white/5 rounded-xl p-4 mb-8 border border-white/10">
+				<div class="flex items-center gap-3 text-secondary">
+					<svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+					</svg>
+					<p class="text-sm text-white/70">
+						Tiempo estimado de respuesta: <span class="text-white font-semibold">24-48 horas hábiles</span>
+					</p>
+				</div>
+			</div>
+			
+			<!-- Botones -->
+			<div class="flex flex-col sm:flex-row gap-4">
+				<button
+					id="closeModal"
+					class="flex-1 px-6 py-3 bg-gradient-to-r from-secondary to-primary text-white font-bold rounded-full hover:opacity-90 transition-opacity"
+				>
+					Entendido
+				</button>
+				<a
+					href="/"
+					class="flex-1 px-6 py-3 border border-white/20 text-white font-semibold rounded-full hover:bg-white/10 transition-colors text-center"
+				>
+					Volver al inicio
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal de Error -->
+<div id="errorModal" class="fixed inset-0 z-50 hidden">
+	<!-- Overlay -->
+	<div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="errorModalOverlay"></div>
+	
+	<!-- Modal Content -->
+	<div class="relative min-h-screen flex items-center justify-center p-4">
+		<div class="bg-gradient-to-br from-red-900/50 to-black border border-red-500/30 rounded-3xl p-8 md:p-12 max-w-lg w-full shadow-2xl">
+			<!-- Icono de error -->
+			<div class="flex justify-center mb-6">
+				<div class="w-20 h-20 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center">
+					<svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path>
+					</svg>
+				</div>
+			</div>
+			
+			<!-- Título -->
+			<h3 class="text-3xl font-bold text-white text-center mb-4">
+				Error al Enviar
+			</h3>
+			
+			<!-- Mensaje -->
+			<p class="text-white/80 text-center mb-8 leading-relaxed">
+				Hubo un problema al enviar su formulario. Por favor, inténtelo de nuevo o contáctenos directamente.
+			</p>
+			
+			<!-- Botón -->
+			<button
+				id="closeErrorModal"
+				class="w-full px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-full hover:opacity-90 transition-opacity"
+			>
+				Intentar de nuevo
+			</button>
+		</div>
+	</div>
+</div>
+
+<!-- Modal de Archivos Requeridos -->
+<div id="filesRequiredModal" class="fixed inset-0 z-50 hidden">
+	<!-- Overlay -->
+	<div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="filesRequiredModalOverlay"></div>
+	
+	<!-- Modal Content -->
+	<div class="relative min-h-screen flex items-center justify-center p-4">
+		<div class="bg-gradient-to-br from-yellow-900/50 to-black border border-yellow-500/30 rounded-3xl p-8 md:p-12 max-w-lg w-full shadow-2xl">
+			<!-- Icono de advertencia -->
+			<div class="flex justify-center mb-6">
+				<div class="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center">
+					<svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+					</svg>
+				</div>
+			</div>
+			
+			<!-- Título -->
+			<h3 class="text-3xl font-bold text-white text-center mb-4">
+				Documentos Requeridos
+			</h3>
+			
+			<!-- Mensaje -->
+			<p class="text-white/80 text-center mb-8 leading-relaxed">
+				Este formulario requiere que adjunte al menos un documento. Por favor, cargue los archivos necesarios antes de enviar.
+			</p>
+			
+			<!-- Botón -->
+			<button
+				id="closeFilesRequiredModal"
+				class="w-full px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-bold rounded-full hover:opacity-90 transition-opacity"
+			>
+				Entendido
+			</button>
+		</div>
+	</div>
+</div>
+
+<!-- Modal de Teléfono Requerido -->
+<div id="phoneRequiredModal" class="fixed inset-0 z-50 hidden">
+	<!-- Overlay -->
+	<div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="phoneRequiredModalOverlay"></div>
+	
+	<!-- Modal Content -->
+	<div class="relative min-h-screen flex items-center justify-center p-4">
+		<div class="bg-gradient-to-br from-orange-900/50 to-black border border-orange-500/30 rounded-3xl p-8 md:p-12 max-w-lg w-full shadow-2xl">
+			<!-- Icono de teléfono -->
+			<div class="flex justify-center mb-6">
+				<div class="w-20 h-20 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+					<svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+					</svg>
+				</div>
+			</div>
+			
+			<!-- Título -->
+			<h3 class="text-3xl font-bold text-white text-center mb-4">
+				Teléfono Requerido
+			</h3>
+			
+			<!-- Mensaje -->
+			<p class="text-white/80 text-center mb-8 leading-relaxed">
+				Si no tiene Número A (número de extranjero), debe proporcionar un número de teléfono de contacto para poder procesar su solicitud.
+			</p>
+			
+			<!-- Botón -->
+			<button
+				id="closePhoneRequiredModal"
+				class="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold rounded-full hover:opacity-90 transition-opacity"
+			>
+				Entendido
+			</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	// Toggle para mostrar/ocultar detalles de privacidad
+	const toggleBtn = document.getElementById('togglePrivacyDetails');
+	const privacyDetails = document.getElementById('privacyDetails');
+	
+	if (toggleBtn && privacyDetails) {
+		toggleBtn.addEventListener('click', () => {
+			const isHidden = privacyDetails.classList.contains('hidden');
+			privacyDetails.classList.toggle('hidden');
+			toggleBtn.textContent = isHidden ? 'Ocultar información' : 'Ver más información';
+		});
+	}
+
+	// Habilitar/deshabilitar botón según checkbox de aceptación
+	const acceptCheckbox = document.getElementById('acceptDataTreatment') as HTMLInputElement;
+	const submitButton = document.getElementById('submitButton') as HTMLButtonElement;
+	const acceptanceWarning = document.getElementById('acceptanceWarning');
+
+	if (acceptCheckbox && submitButton) {
+		const updateSubmitState = () => {
+			submitButton.disabled = !acceptCheckbox.checked;
+			if (acceptanceWarning) {
+				acceptanceWarning.classList.toggle('hidden', acceptCheckbox.checked);
+			}
+		};
+		
+		acceptCheckbox.addEventListener('change', updateSubmitState);
+		updateSubmitState(); // Estado inicial
+	}
+
+	// Modales
+	const successModal = document.getElementById('successModal');
+	const errorModal = document.getElementById('errorModal');
+	const filesRequiredModal = document.getElementById('filesRequiredModal');
+	const phoneRequiredModal = document.getElementById('phoneRequiredModal');
+	const closeModalBtn = document.getElementById('closeModal');
+	const closeErrorModalBtn = document.getElementById('closeErrorModal');
+	const closeFilesRequiredModalBtn = document.getElementById('closeFilesRequiredModal');
+	const closePhoneRequiredModalBtn = document.getElementById('closePhoneRequiredModal');
+	const modalOverlay = document.getElementById('modalOverlay');
+	const errorModalOverlay = document.getElementById('errorModalOverlay');
+	const filesRequiredModalOverlay = document.getElementById('filesRequiredModalOverlay');
+	const phoneRequiredModalOverlay = document.getElementById('phoneRequiredModalOverlay');
+
+	const showSuccessModal = () => {
+		successModal?.classList.remove('hidden');
+		document.body.style.overflow = 'hidden';
+	};
+
+	const hideSuccessModal = () => {
+		successModal?.classList.add('hidden');
+		document.body.style.overflow = '';
+	};
+
+	const showErrorModal = () => {
+		errorModal?.classList.remove('hidden');
+		document.body.style.overflow = 'hidden';
+	};
+
+	const hideErrorModal = () => {
+		errorModal?.classList.add('hidden');
+		document.body.style.overflow = '';
+	};
+
+	const showFilesRequiredModal = () => {
+		filesRequiredModal?.classList.remove('hidden');
+		document.body.style.overflow = 'hidden';
+	};
+
+	const hideFilesRequiredModal = () => {
+		filesRequiredModal?.classList.add('hidden');
+		document.body.style.overflow = '';
+	};
+
+	const showPhoneRequiredModal = () => {
+		phoneRequiredModal?.classList.remove('hidden');
+		document.body.style.overflow = 'hidden';
+	};
+
+	const hidePhoneRequiredModal = () => {
+		phoneRequiredModal?.classList.add('hidden');
+		document.body.style.overflow = '';
+	};
+
+	closeModalBtn?.addEventListener('click', hideSuccessModal);
+	modalOverlay?.addEventListener('click', hideSuccessModal);
+	closeErrorModalBtn?.addEventListener('click', hideErrorModal);
+	errorModalOverlay?.addEventListener('click', hideErrorModal);
+	closeFilesRequiredModalBtn?.addEventListener('click', hideFilesRequiredModal);
+	filesRequiredModalOverlay?.addEventListener('click', hideFilesRequiredModal);
+	closePhoneRequiredModalBtn?.addEventListener('click', hidePhoneRequiredModal);
+	phoneRequiredModalOverlay?.addEventListener('click', hidePhoneRequiredModal);
+
+	// Cerrar con Escape
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') {
+			hideSuccessModal();
+			hideErrorModal();
+			hideFilesRequiredModal();
+			hidePhoneRequiredModal();
+		}
+	});
+
+	// Verificar si hay archivos requeridos
+	const fileUploadSection = document.getElementById('file-upload-section');
+	const hasRequiredFiles = fileUploadSection?.getAttribute('data-has-required-files') === 'true';
+	const fileInput = document.getElementById('file-input') as HTMLInputElement;
+
+	// Función para verificar si tiene número alien
+	const getAlienNumber = (formData: FormData): string | null => {
+		const alienFields = ['numeroA', 'numeroExtranjero', 'aNumber', 'numeroAAbusador'];
+		for (const field of alienFields) {
+			const value = formData.get(field);
+			if (value && typeof value === 'string' && value.trim()) {
+				return value.trim();
+			}
+		}
+		return null;
+	};
+
+	// Función para verificar si tiene teléfono
+	const getPhoneNumber = (formData: FormData): string | null => {
+		const phoneFields = ['telefono', 'telefonoContacto', 'phone', 'numeroTelefono', 'celular'];
+		for (const field of phoneFields) {
+			const value = formData.get(field);
+			if (value && typeof value === 'string' && value.trim()) {
+				return value.trim();
+			}
+		}
+		return null;
+	};
+
+	// Manejo del envío del formulario
+	const form = document.getElementById('dynamic-form') as HTMLFormElement;
+	if (form) {
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			
+			// Verificar que aceptó el tratamiento de datos
+			if (!acceptCheckbox?.checked) {
+				showErrorModal();
+				return;
+			}
+
+			// Crear FormData para validaciones
+			const formData = new FormData(form);
+			
+			// Validación condicional: si no hay número alien, debe haber teléfono
+			const alienNumber = getAlienNumber(formData);
+			const phoneNumber = getPhoneNumber(formData);
+			
+			if (!alienNumber && !phoneNumber) {
+				showPhoneRequiredModal();
+				return;
+			}
+			
+			// Verificar archivos requeridos
+			if (hasRequiredFiles && fileInput) {
+				const files = fileInput.files;
+				if (!files || files.length === 0) {
+					showFilesRequiredModal();
+					return;
+				}
+			}
+			
+			const originalText = submitButton?.textContent;
+			
+			if (submitButton) {
+				submitButton.disabled = true;
+				submitButton.textContent = 'Enviando...';
+			}
+			
+			try {
+				const response = await fetch(form.action, {
+					method: 'POST',
+					body: formData,
+				});
+				
+				if (response.ok) {
+					// Mostrar modal de éxito
+					showSuccessModal();
+					form.reset();
+					
+					// Resetear estado del botón después del reset del form
+					if (submitButton && acceptanceWarning) {
+						submitButton.disabled = true;
+						acceptanceWarning.classList.remove('hidden');
+					}
+				} else {
+					throw new Error('Error al enviar el formulario');
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				showErrorModal();
+			} finally {
+				if (submitButton && originalText) {
+					submitButton.disabled = !acceptCheckbox?.checked;
+					submitButton.textContent = originalText;
+				}
+			}
+		});
+	}
+</script>
+
+<style>
+	/* Estilos adicionales para mejorar la apariencia */
+	.form-field {
+		animation: fadeInUp 0.5s ease-out;
+		animation-fill-mode: both;
+	}
+	
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+	
+	/* Estilos para inputs de fecha en navegadores que lo soporten */
+	input[type="date"]::-webkit-calendar-picker-indicator {
+		filter: invert(1);
+		cursor: pointer;
+	}
+	
+	/* Estilos para select */
+	select option {
+		background-color: #0f3f4c;
+		color: white;
+	}
+</style>

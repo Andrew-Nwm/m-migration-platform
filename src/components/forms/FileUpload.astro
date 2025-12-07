@@ -1,0 +1,272 @@
+---
+interface Props {
+	requiredFiles?: string[];
+}
+
+const { requiredFiles = [] } = Astro.props;
+const hasRequiredFiles = requiredFiles && requiredFiles.length > 0;
+---
+
+<div class="form-field" id="file-upload-section" data-has-required-files={hasRequiredFiles ? "true" : "false"}>
+	<label class="block text-white font-semibold mb-3 text-lg">
+		Documentos Adjuntos
+		{hasRequiredFiles && <span class="text-secondary ml-1">*</span>}
+	</label>
+	
+	{hasRequiredFiles ? (
+		<div class="mb-4">
+			<p class="text-white/80 mb-3 text-sm">
+				Por favor, cargue los siguientes documentos requeridos:
+			</p>
+			<ul class="list-disc list-inside space-y-2 mb-4 text-white/70 text-sm">
+				{requiredFiles.map((file) => (
+					<li class="flex items-center gap-2">
+						<svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+						</svg>
+						{file}
+					</li>
+				))}
+			</ul>
+		</div>
+	) : (
+		<p class="text-white/80 mb-4 text-sm">
+			Cargue los archivos que crea que sean relevantes para el proceso.
+		</p>
+	)}
+	
+	<div class="file-upload-container">
+		<input
+			type="file"
+			name="files"
+			id="file-input"
+			multiple
+			class="hidden"
+			accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.gif,.webp,.txt,.rtf,.odt"
+		/>
+		
+		<label
+			for="file-input"
+			class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/30 rounded-lg cursor-pointer bg-white/5 hover:bg-white/10 hover:border-white/50 transition-all group"
+		>
+			<div class="flex flex-col items-center justify-center pt-5 pb-6">
+				<svg class="w-10 h-10 mb-3 text-white/50 group-hover:text-secondary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+				</svg>
+				<p class="mb-2 text-sm text-white/70 group-hover:text-white transition-colors">
+					<span class="font-semibold">Haga clic para cargar</span> o arrastre y suelte
+				</p>
+				<p class="text-xs text-white/50">
+					PDF, Word, Excel, CSV, Imágenes (JPG, PNG, GIF) - Máx. 10MB
+				</p>
+			</div>
+		</label>
+		
+		<div id="file-list" class="mt-4 space-y-2"></div>
+	</div>
+</div>
+
+<script>
+	const fileInput = document.getElementById('file-input') as HTMLInputElement;
+	const fileList = document.getElementById('file-list');
+	const maxFileSize = 10 * 1024 * 1024; // 10MB
+	const uploadedFiles: File[] = [];
+	
+	if (fileInput && fileList) {
+		// Manejar selección de archivos
+		fileInput.addEventListener('change', (e) => {
+			const target = e.target as HTMLInputElement;
+			if (target.files) {
+				handleFiles(Array.from(target.files));
+			}
+		});
+		
+		// Manejar drag and drop
+		const container = fileInput.closest('.file-upload-container');
+		if (container) {
+			const label = container.querySelector('label[for="file-input"]');
+			
+			if (label) {
+				label.addEventListener('dragover', (e) => {
+					e.preventDefault();
+					label.classList.add('border-secondary', 'bg-white/15');
+				});
+				
+				label.addEventListener('dragleave', () => {
+					label.classList.remove('border-secondary', 'bg-white/15');
+				});
+				
+				label.addEventListener('drop', (e) => {
+					e.preventDefault();
+					label.classList.remove('border-secondary', 'bg-white/15');
+					
+					const files = Array.from(e.dataTransfer?.files || []);
+					handleFiles(files);
+				});
+			}
+		}
+		
+		function handleFiles(files: File[]) {
+			files.forEach((file) => {
+				// Validar tamaño
+				if (file.size > maxFileSize) {
+					alert(`El archivo ${file.name} es demasiado grande. Máximo 10MB.`);
+					return;
+				}
+				
+				// Validar tipo MIME
+				const validMimeTypes = [
+					// Documentos
+					'application/pdf',
+					'application/msword',
+					'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+					'application/vnd.ms-excel',
+					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+					'text/csv',
+					'text/plain',
+					'application/rtf',
+					'application/vnd.oasis.opendocument.text',
+					// Imágenes
+					'image/jpeg',
+					'image/jpg',
+					'image/png',
+					'image/gif',
+					'image/webp',
+				];
+				
+				// Validar extensión (más seguro)
+				const validExtensions = [
+					'.pdf', '.doc', '.docx', '.xls', '.xlsx', '.csv', 
+					'.txt', '.rtf', '.odt',
+					'.jpg', '.jpeg', '.png', '.gif', '.webp'
+				];
+				
+				// Extensiones prohibidas (por seguridad)
+				const blockedExtensions = [
+					'.js', '.css', '.html', '.htm', '.xml', '.sql', 
+					'.php', '.py', '.rb', '.sh', '.bat', '.cmd', '.ps1',
+					'.exe', '.dll', '.msi', '.jar', '.class',
+					'.vbs', '.vbe', '.wsf', '.wsh', '.scr',
+					'.com', '.pif', '.application', '.gadget',
+					'.hta', '.cpl', '.msc', '.msp', '.reg'
+				];
+				
+				const fileName = file.name.toLowerCase();
+				const fileExtension = '.' + fileName.split('.').pop();
+				
+				// Verificar extensiones bloqueadas
+				if (blockedExtensions.includes(fileExtension)) {
+					alert(`El archivo ${file.name} no está permitido por razones de seguridad.`);
+					return;
+				}
+				
+				// Verificar extensión válida
+				if (!validExtensions.includes(fileExtension)) {
+					alert(`El tipo de archivo ${fileExtension} no es válido. Solo se permiten: PDF, DOC, DOCX, XLS, XLSX, CSV, TXT, RTF, ODT, JPG, PNG, GIF, WEBP.`);
+					return;
+				}
+				
+				// Validar MIME type si está disponible
+				if (file.type && !validMimeTypes.includes(file.type) && file.type !== '') {
+					// Permitir si la extensión es válida pero el MIME no coincide exactamente
+					// (algunos navegadores reportan MIME types diferentes)
+					console.warn(`MIME type ${file.type} no reconocido para ${file.name}, pero extensión válida.`);
+				}
+				
+				// Agregar a la lista si no existe
+				if (!uploadedFiles.find(f => f.name === file.name && f.size === file.size)) {
+					uploadedFiles.push(file);
+					renderFileList();
+					updateFileInput();
+				}
+			});
+		}
+		
+		function updateFileInput() {
+			// Crear un nuevo DataTransfer para actualizar el input
+			const dataTransfer = new DataTransfer();
+			uploadedFiles.forEach(file => {
+				dataTransfer.items.add(file);
+			});
+			fileInput.files = dataTransfer.files;
+		}
+		
+		function renderFileList() {
+			if (!fileList) return;
+			
+			if (uploadedFiles.length === 0) {
+				fileList.innerHTML = '';
+				return;
+			}
+			
+			fileList.innerHTML = uploadedFiles.map((file, index) => {
+				const fileSize = (file.size / 1024 / 1024).toFixed(2);
+				return `
+					<div class="file-item flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all" data-index="${index}">
+						<div class="flex items-center gap-3 flex-1 min-w-0">
+							<svg class="w-5 h-5 text-secondary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+							</svg>
+							<div class="min-w-0 flex-1">
+								<p class="text-white text-sm font-medium truncate">${file.name}</p>
+								<p class="text-white/50 text-xs">${fileSize} MB</p>
+							</div>
+						</div>
+						<button
+							type="button"
+							class="remove-file ml-3 p-1 text-white/50 hover:text-red-400 transition-colors"
+							data-index="${index}"
+							aria-label="Eliminar archivo"
+						>
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+					</div>
+				`;
+			}).join('');
+			
+			// Agregar event listeners a los botones de eliminar
+			fileList.querySelectorAll('.remove-file').forEach((button) => {
+				button.addEventListener('click', (e) => {
+					const target = e.currentTarget as HTMLElement;
+					const index = parseInt(target.getAttribute('data-index') || '0');
+					uploadedFiles.splice(index, 1);
+					renderFileList();
+					updateFileInput();
+				});
+			});
+		}
+		
+		// Asegurar que los archivos se incluyan en el FormData al enviar
+		const form = fileInput.closest('form') as HTMLFormElement;
+		if (form) {
+			form.addEventListener('submit', (e) => {
+				// Los archivos ya están en el input, se incluirán automáticamente en el FormData
+				updateFileInput();
+			});
+		}
+	}
+</script>
+
+<style>
+	.file-upload-container {
+		animation: fadeInUp 0.5s ease-out;
+	}
+	
+	.file-item {
+		animation: slideIn 0.3s ease-out;
+	}
+	
+	@keyframes slideIn {
+		from {
+			opacity: 0;
+			transform: translateX(-10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+</style>
+

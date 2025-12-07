@@ -24,7 +24,10 @@ const forms = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
+		color: z.string(),
+		icon: z.string(),
 		fields: z.array(fieldSchema),
+		requiredFiles: z.array(z.string()).optional(),
 	}),
 });
 

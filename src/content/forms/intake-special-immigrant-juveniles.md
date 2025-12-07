@@ -1,6 +1,8 @@
 ---
-title: "Special Immigrant Juvenile Status (SIJ)"
-description: "Formulario para recopilar datos del menor, padres o tutores y antecedentes necesarios para casos de Estatus de Inmigrante Juvenil Especial."
+title: "SPECIAL IMMIGRANT JUVENILE STATUS (SIJ)"
+description: "Formulario Estatus de Inmigrante Juvenil Especial."
+color: "from-[#0f3f4c] to-[#87b8c6]"
+icon: "users"
 fields:
   - name: "nombre"
     label: "Nombre del menor"

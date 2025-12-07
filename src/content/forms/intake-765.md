@@ -1,15 +1,17 @@
 ---
-title: "Intake o Formulario para el Llenado de I-765 Solicitud de Autorización de Empleo"
-description: "Formulario inicial para solicitar autorización de empleo (I-765) con datos personales, familiares y antecedentes básicos."
+title: "INTAKE I-765"
+description: "Formulario inicial para solicitar autorización de empleo (I-765) "
+color: "from-[#0f3f4c] to-[#87b8c6]"
+icon: "briefcase"
 fields:
   - name: "nombreCompleto"
     label: "Nombre completo del solicitante"
     type: "text"
     required: true
   - name: "numeroA"
-    label: "Numero A"
+    label: "Numero A (si tiene)"
     type: "text"
-    required: true
+    required: false
   - name: "direccionActual"
     label: "Dirección actual"
     type: "text"
@@ -18,10 +20,10 @@ fields:
     label: "Codigo Postal"
     type: "number"
     required: true
-  - name: "numeroTelefono"
-    label: "Numero Telefono"
-    type: "number"
-    required: true
+  - name: "telefono"
+    label: "Teléfono de contacto"
+    type: "tel"
+    required: false
   - name: "nombrePadre"
     label: "Nombre Padre"
     type: "text"
@@ -38,5 +40,11 @@ fields:
     label: "Explique brevemente"
     type: "textarea"
     required: false
+requiredFiles:
+  - "Pasaporte vigente"
+  - "Formulario I-765 completado"
+  - "Fotografías tamaño pasaporte (2)"
+  - "Comprobante de pago de tarifas"
+  - "Documentos de identidad"
 ---
 Formulario para solicitar autorización de empleo (I-765). Incluye campos personales, familiares y antecedentes penales. Adjuntar documentos requeridos según instrucciones.

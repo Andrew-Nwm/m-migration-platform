@@ -1,6 +1,8 @@
 ---
 title: "INTAKE FORM VAWA"
-description: "Formulario para víctimas de abuso que buscan alivio bajo VAWA, incluye información del solicitante, del agresor y evidencias disponibles."
+description: "Formulario para víctimas de abuso que buscan alivio bajo VAWA,"
+color: "from-[#0f3f4c] to-[#87b8c6]"
+icon: "shield"
 fields:
   - name: "nombreCompleto"
     label: "Nombre completo del solicitante"
@@ -19,9 +21,9 @@ fields:
     type: "text"
     required: true
   - name: "telefono"
-    label: "Teléfono"
+    label: "Teléfono de contacto"
     type: "tel"
-    required: true
+    required: false
   - name: "email"
     label: "Correo electrónico"
     type: "email"
@@ -97,5 +99,11 @@ fields:
     label: "Observaciones adicionales"
     type: "textarea"
     required: false
+requiredFiles:
+  - "Formulario I-360 completado"
+  - "Declaración jurada personal"
+  - "Evidencia de abuso (reportes policiales, órdenes de protección, documentos médicos)"
+  - "Prueba de relación con el abusador"
+  - "Documentos de identidad"
 ---
 Formulario para víctimas de abuso (VAWA). Incluye datos personales, del abusador, tipo de abuso y evidencia.

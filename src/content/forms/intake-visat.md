@@ -1,6 +1,8 @@
 ---
 title: "INTAKE FORM VISA T"
-description: "Formulario preliminar para sobrevivientes de trata de personas (Visa T), incluye detalles del caso, cooperación y evidencia disponible."
+description: "Formulario preliminar para sobrevivientes de trata de personas (Visa T)"
+color: "from-[#0f3f4c] to-[#87b8c6]"
+icon: "shield"
 fields:
   - name: "nombreCompleto"
     label: "Nombre completo del solicitante"
@@ -19,9 +21,9 @@ fields:
     type: "text"
     required: true
   - name: "telefono"
-    label: "Teléfono"
+    label: "Teléfono de contacto"
     type: "tel"
-    required: true
+    required: false
   - name: "email"
     label: "Correo electrónico"
     type: "email"

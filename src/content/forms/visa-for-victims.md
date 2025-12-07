@@ -1,6 +1,8 @@
 ---
-title: "Intake for admission annex Visa for victims. (C/U)"
-description: "Formulario de admisión para visas enfocadas en víctimas, cubre historial personal, familiar, migratorio y causales de inadmisibilidad."
+title: "INTAKE FOR ADMISSION ANNEX VISA FOR VICTIMS "
+description: "Formulario de admisión para visas enfocadas en víctimas."
+color: "from-[#0f3f4c] to-[#87b8c6]"
+icon: "shield"
 fields:
   - name: "nombreCompleto"
     label: "Nombre Legal Completo"
@@ -9,6 +11,10 @@ fields:
   - name: "aNumber"
     label: "Número de registro de extranjero (A-Number) (si tienes)"
     type: "text"
+    required: false
+  - name: "telefono"
+    label: "Teléfono de contacto"
+    type: "tel"
     required: false
   - name: "estadoCivil"
     label: "¿Cuál es tu estado civil actual?"

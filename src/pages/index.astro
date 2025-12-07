@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import "../styles/global.css";
+import { getCollection } from "astro:content";
 
 // contact-data
 const phone = "16464272634";
@@ -71,51 +71,54 @@ const testimonials = [
 	}
 ];
 
+
+const forms = await getCollection("forms");
+
 // Forms Data
-const forms = [
-	{
-		title: "Permiso de Trabajo",
-		description: "Formulario I-765",
-		href: "/forms/intake-765",
-		color: "from-[#87b8c6] to-[#2e707b]",
-		icon: "briefcase"
-	},
-	{
-		title: "Protección VAWA",
-		description: "Violencia Doméstica",
-		href: "/forms/intake-vawa",
-		color: "from-[#2e707b] to-[#0f3f4c]",
-		icon: "shield"
-	},
-	{
-		title: "Visa U",
-		description: "Víctimas de Crimen",
-		href: "/forms/intake-visa-u",
-		color: "from-[#0f3f4c] to-[#87b8c6]",
-		icon: "users"
-	},
-	{
-		title: "Asilo Político",
-		description: "Formulario I-589",
-		href: "/forms/intake-i589",
-		color: "from-[#87b8c6] to-[#2e707b]",
-		icon: "home"
-	},
-	{
-		title: "Visa T",
-		description: "Víctimas de Trata",
-		href: "/forms/intake-visa-t",
-		color: "from-[#2e707b] to-[#0f3f4c]",
-		icon: "file"
-	},
-	{
-		title: "SIJ",
-		description: "Inmigrante Juvenil Especial",
-		href: "/forms/intake-sij",
-		color: "from-[#0f3f4c] to-[#87b8c6]",
-		icon: "help"
-	}
-];
+// const forms = [
+// 	{
+// 		title: "Permiso de Trabajo",
+// 		description: "Formulario I-765",
+// 		href: "/forms/intake-765",
+// 		color: "from-[#87b8c6] to-[#2e707b]",
+// 		icon: "briefcase"
+// 	},
+// 	{
+// 		title: "Protección VAWA",
+// 		description: "Violencia Doméstica",
+// 		href: "/forms/intake-vawa",
+// 		color: "from-[#2e707b] to-[#0f3f4c]",
+// 		icon: "shield"
+// 	},
+// 	{
+// 		title: "Visa U",
+// 		description: "Víctimas de Crimen",
+// 		href: "/forms/intake-visa-u",
+// 		color: "from-[#0f3f4c] to-[#87b8c6]",
+// 		icon: "users"
+// 	},
+// 	{
+// 		title: "Asilo Político",
+// 		description: "Formulario I-589",
+// 		href: "/forms/intake-i589",
+// 		color: "from-[#87b8c6] to-[#2e707b]",
+// 		icon: "home"
+// 	},
+// 	{
+// 		title: "Visa T",
+// 		description: "Víctimas de Trata",
+// 		href: "/forms/intake-visa-t",
+// 		color: "from-[#2e707b] to-[#0f3f4c]",
+// 		icon: "file"
+// 	},
+// 	{
+// 		title: "SIJ",
+// 		description: "Inmigrante Juvenil Especial",
+// 		href: "/forms/intake-sij",
+// 		color: "from-[#0f3f4c] to-[#87b8c6]",
+// 		icon: "help"
+// 	}
+// ];
 ---
 
 <Layout
@@ -604,49 +607,49 @@ const forms = [
 			<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
 				{forms.map((form, idx) => (
 					<a
-						href={form.href}
+						href={`/formularios/${form.slug}`}
 						class="form-card group"
 						data-index={idx}
 					>
 						<div class="relative h-64 rounded-3xl overflow-hidden transition-all duration-500 group-hover:scale-105">
-							<div class={`absolute inset-0 bg-linear-to-br ${form.color} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
+							<div class={`absolute inset-0 bg-linear-to-br ${form.data.color} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
 
 							<div class="relative z-10 h-full flex flex-col items-center justify-center p-8 text-center">
 								<div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-									{form.icon === 'briefcase' && (
+									{form.data.icon === 'briefcase' && (
 										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
 										</svg>
 									)}
-									{form.icon === 'shield' && (
+									{form.data.icon === 'shield' && (
 										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
 										</svg>
 									)}
-									{form.icon === 'users' && (
+									{form.data.icon === 'users' && (
 										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
 										</svg>
 									)}
-									{form.icon === 'home' && (
+									{form.data.icon === 'home' && (
 										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
 										</svg>
 									)}
-									{form.icon === 'file' && (
+									{form.data.icon === 'file' && (
 										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 										</svg>
 									)}
-									{form.icon === 'help' && (
+									{form.data.icon === 'help' && (
 										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
 										</svg>
 									)}
 								</div>
 
-								<h3 class="text-2xl font-bold text-white mb-2">{form.title}</h3>
-								<p class="text-white/80 mb-6">{form.description}</p>
+								<h3 class="text-2xl font-bold text-white mb-2">{form.data.title}</h3>
+								<p class="text-white/80 mb-6">{form.data.description}</p>
 
 								<div class="inline-flex items-center gap-2 text-white font-semibold group-hover:gap-4 transition-all">
 									Llenar formulario

@@ -1,6 +1,8 @@
 ---
-title: "PRO SE I-589, Application for Asylum and for Withholding of Removal, Relief Under the Convention against Torture."
-description: "Recopila información personal, familiar y migratoria para evaluar solicitudes de asilo y alivio bajo la Convención contra la Tortura."
+title: "PRO SE I-589"
+description: "Formulario para evaluar solicitudes de asilo y alivio bajo la Convención contra la Tortura."
+color: "from-[#0f3f4c] to-[#87b8c6]"
+icon: "shield"
 fields:
   - name: "primerNombre"
     label: "Primer Nombre"
@@ -17,6 +19,10 @@ fields:
   - name: "numeroExtranjero"
     label: "Numero de extranjero (si tiene)"
     type: "text"
+    required: false
+  - name: "telefono"
+    label: "Teléfono de contacto"
+    type: "tel"
     required: false
   - name: "numeroSeguroSocial"
     label: "Numero de Seguro Social (si tiene)"

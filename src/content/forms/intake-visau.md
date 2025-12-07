@@ -1,6 +1,8 @@
 ---
 title: "INTAKE FORM VISA U"
-description: "Formulario de intake para víctimas de determinados crímenes que buscan la Visa U, cubre datos personales, del incidente y cooperación con autoridades."
+description: "Formulario para víctimas de determinados crímenes que buscan la Visa U."
+color: "from-[#0f3f4c] to-[#87b8c6]"
+icon: "shield"
 fields:
   - name: "nombreCompleto"
     label: "Nombre completo del solicitante"
@@ -19,9 +21,9 @@ fields:
     type: "text"
     required: true
   - name: "telefono"
-    label: "Teléfono"
+    label: "Teléfono de contacto"
     type: "tel"
-    required: true
+    required: false
   - name: "email"
     label: "Correo electrónico"
     type: "email"
