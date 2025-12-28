@@ -4,7 +4,8 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-	output: 'server',
+	output: "server",
+	site: "https://m-migration.com",
 
 	vite: {
 		plugins: [tailwindcss()],
@@ -12,11 +13,27 @@ export default defineConfig({
 
 	env: {
 		schema: {
-			SHAREPOINT_TENANT_ID: envField.string({context: 'server', access:'secret' }),
-			SHAREPOINT_CLIENT_ID: envField.string({context: 'server', access:'secret' }),
-			SHAREPOINT_CLIENT_SECRET: envField.string({context: 'server', access:'secret' }),
-			SHAREPOINT_SITE_ID: envField.string({context: 'server', access:'secret' }),
-			SHAREPOINT_DRIVE_ID: envField.string({context: 'server', access:'secret', optional: true }),
-		}
-	}
+			SHAREPOINT_TENANT_ID: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+			SHAREPOINT_CLIENT_ID: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+			SHAREPOINT_CLIENT_SECRET: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+			SHAREPOINT_SITE_ID: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+			SHAREPOINT_DRIVE_ID: envField.string({
+				context: "server",
+				access: "secret",
+				optional: true,
+			}),
+		},
+	},
 });

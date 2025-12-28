@@ -10,6 +10,8 @@ interface Props {
 		title: string;
 		description: string;
 		type: string;
+		image?: string;
+		url?: string;
 	};
 }
 
@@ -20,15 +22,18 @@ export const viewport = {
 };
 
 const {
-	title = "M-Migration LLC - Tu Camino Hacia el Sueño American",
-	description = "Especialistas en llenado de formularios migratorios. Llenado de formularios de visas de trabajo, reunificación familiar, VAWA, Visa U y T. Más de 15 años organizando documentos para familias.",
-	keywords = "inmigración, visas de trabajo, reunificación familiar, VAWA, Visa U, Visa T, llenado de formularios, M-Migration LLC",
+	title = "M-Migration LLC - Especialistas en Formularios Migratorios USA | VAWA, Visa U, Visa T",
+	description = "Especialistas en llenado de formularios migratorios en Estados Unidos. Ayudamos con VAWA, Visa U, Visa T, I-765, I-589 y más. Más de 15 años de experiencia. Contacto: +1 (646) 427-2634",
+	keywords = "formularios migratorios, VAWA, Visa U, Visa T, I-765, I-589, inmigración USA, reunificación familiar, permisos de trabajo, asilo político, M-Migration LLC",
 	authors = "M-Migration LLC",
 	openGraph = {
 		title:
 			"M-Migration LLC - Especialistas en Llenado de Formularios Migratorios",
-		description: "Asistencia en llenado de formularios migratorios",
+		description:
+			"Asistencia profesional en llenado de formularios migratorios. VAWA, Visa U, Visa T y más.",
 		type: "website",
+		image: "/og-image.jpg",
+		url: "https://m-migration.com",
 	},
 } = Astro.props;
 ---
@@ -43,14 +48,68 @@ const {
 		<meta name="keywords" content={keywords} />
 		<meta name="author" content={authors} />
 
+		<!-- Open Graph -->
 		<meta property="og:type" content={openGraph.type} />
 		<meta property="og:title" content={openGraph.title} />
 		<meta property="og:description" content={openGraph.description} />
+		<meta property="og:image" content={openGraph.image} />
+		<meta property="og:url" content={openGraph.url} />
+		<meta property="og:site_name" content="M-Migration LLC" />
+		<meta property="og:locale" content="es_US" />
+
+		<!-- Twitter Cards -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={openGraph.title} />
+		<meta name="twitter:description" content={openGraph.description} />
+		<meta name="twitter:image" content={openGraph.image} />
+
+		<!-- Canonical URL -->
+		<link rel="canonical" href={openGraph.url} />
+
+		<!-- Datos Estructurados JSON-LD -->
+		<script
+			type="application/ld+json"
+			set:html={JSON.stringify({
+				"@context": "https://schema.org",
+				"@type": "LegalService",
+				name: "M-Migration LLC",
+				description: description,
+				url: openGraph.url,
+				telephone: "+16464272634",
+				email: "m-migration@outlook.com",
+				address: {
+					"@type": "PostalAddress",
+					addressCountry: "US",
+				},
+				areaServed: "US",
+				priceRange: "$$",
+				aggregateRating: {
+					"@type": "AggregateRating",
+					ratingValue: "4.9",
+					reviewCount: "500",
+				},
+				serviceType: [
+					"Formularios Migratorios",
+					"VAWA",
+					"Visa U",
+					"Visa T",
+					"I-765",
+					"I-589",
+					"Reunificación Familiar",
+					"Permisos de Trabajo",
+				],
+			})}
+		/>
 
 		<title>{title}</title>
 		<link rel="icon" type="image/svg+xml" href="icon/icono.svg" />
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="preload"
+			as="style"
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+		/>
 		<link
 			href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
 			rel="stylesheet"

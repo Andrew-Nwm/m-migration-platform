@@ -1,0 +1,11 @@
+# Robots.txt - M-Migration LLC
+# Permitir a todos los motores de búsqueda indexar el sitio
+
+User-agent: *
+Allow: /
+
+# Bloquear solo las rutas de API
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://m-migration.com/sitemap.xml
