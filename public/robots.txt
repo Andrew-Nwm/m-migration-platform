@@ -1,0 +1,12 @@
+# Robots.txt for M-Migration LLC
+# https://m-migration.com
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://m-migration.com/sitemap-index.xml
+
+# Disallow admin or private paths (if any)
+Disallow: /api/
+

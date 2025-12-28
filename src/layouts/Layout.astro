@@ -1,16 +1,19 @@
 ---
 import "../styles/global.css";
 
+// URL base del sitio
+const siteUrl = "https://m-migration.com";
+const currentPath = Astro.url.pathname;
+const canonicalUrl = `${siteUrl}${currentPath}`;
+
 interface Props {
 	title?: string;
 	description?: string;
 	keywords?: string;
 	authors?: string;
-	openGraph?: {
-		title: string;
-		description: string;
-		type: string;
-	};
+	image?: string;
+	type?: string;
+	noindex?: boolean;
 }
 
 export const viewport = {
@@ -20,17 +23,74 @@ export const viewport = {
 };
 
 const {
-	title = "M-Migration LLC - Tu Camino Hacia el Sueño American",
-	description = "Especialistas en llenado de formularios migratorios. Llenado de formularios de visas de trabajo, reunificación familiar, VAWA, Visa U y T. Más de 15 años organizando documentos para familias.",
-	keywords = "inmigración, visas de trabajo, reunificación familiar, VAWA, Visa U, Visa T, llenado de formularios, M-Migration LLC",
+	title = "M-Migration LLC - Especialistas en Llenado de Formularios Migratorios",
+	description = "Especialistas en llenado de formularios migratorios. Asistencia profesional para VAWA, Visa U, Visa T, permisos de trabajo y más. Más de 15 años ayudando familias. Consulta gratis.",
+	keywords = "inmigración USA, llenado formularios migratorios, VAWA, Visa U, Visa T, permiso de trabajo, I-765, asilo, reunificación familiar, M-Migration LLC, servicios migratorios New Jersey, servicios migratorios New York",
 	authors = "M-Migration LLC",
-	openGraph = {
-		title:
-			"M-Migration LLC - Especialistas en Llenado de Formularios Migratorios",
-		description: "Asistencia en llenado de formularios migratorios",
-		type: "website",
-	},
+	image = "/og-image.jpg",
+	type = "website",
+	noindex = false,
 } = Astro.props;
+
+// Datos estructurados JSON-LD para SEO
+const structuredData = {
+	"@context": "https://schema.org",
+	"@type": "LegalService",
+	"name": "M-Migration LLC",
+	"description": description,
+	"url": siteUrl,
+	"logo": `${siteUrl}/icon/icono.svg`,
+	"image": `${siteUrl}${image}`,
+	"telephone": "+1-646-427-2634",
+	"email": "m-migration@outlook.com",
+	"address": [
+		{
+			"@type": "PostalAddress",
+			"streetAddress": "272 Nord Broad St",
+			"addressLocality": "Elizabeth",
+			"addressRegion": "NJ",
+			"postalCode": "07202",
+			"addressCountry": "US"
+		},
+		{
+			"@type": "PostalAddress",
+			"streetAddress": "40-01 75th St",
+			"addressLocality": "New York",
+			"addressRegion": "NY",
+			"postalCode": "11373",
+			"addressCountry": "US"
+		}
+	],
+	"geo": {
+		"@type": "GeoCoordinates",
+		"latitude": "40.6639",
+		"longitude": "-74.2107"
+	},
+	"openingHoursSpecification": {
+		"@type": "OpeningHoursSpecification",
+		"dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+		"opens": "09:00",
+		"closes": "18:00"
+	},
+	"sameAs": [
+		"https://www.facebook.com/profile.php?id=61578978987700",
+		"https://www.instagram.com/m.migrationllc",
+		"https://tiktok.com/@m.migration_llc"
+	],
+	"priceRange": "$$",
+	"serviceType": [
+		"Llenado de Formularios Migratorios",
+		"Asistencia VAWA",
+		"Visa U",
+		"Visa T",
+		"Permisos de Trabajo",
+		"Asilo"
+	],
+	"areaServed": {
+		"@type": "Country",
+		"name": "United States"
+	}
+};
 ---
 
 <!doctype html>
@@ -39,16 +99,62 @@ const {
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="theme-color" content={viewport.themeColor} />
+		
+		<!-- SEO Primary Meta Tags -->
+		<title>{title}</title>
+		<meta name="title" content={title} />
 		<meta name="description" content={description} />
 		<meta name="keywords" content={keywords} />
 		<meta name="author" content={authors} />
-
-		<meta property="og:type" content={openGraph.type} />
-		<meta property="og:title" content={openGraph.title} />
-		<meta property="og:description" content={openGraph.description} />
-
-		<title>{title}</title>
-		<link rel="icon" type="image/svg+xml" href="icon/icono.svg" />
+		<meta name="generator" content={Astro.generator} />
+		
+		<!-- Robots -->
+		{noindex ? (
+			<meta name="robots" content="noindex, nofollow" />
+		) : (
+			<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+		)}
+		
+		<!-- Canonical URL -->
+		<link rel="canonical" href={canonicalUrl} />
+		
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content={type} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={`${siteUrl}${image}`} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:site_name" content="M-Migration LLC" />
+		<meta property="og:locale" content="es_ES" />
+		
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={canonicalUrl} />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={`${siteUrl}${image}`} />
+		
+		<!-- Additional SEO -->
+		<meta name="geo.region" content="US-NJ" />
+		<meta name="geo.placename" content="Elizabeth, New Jersey" />
+		<meta name="language" content="Spanish" />
+		<meta name="revisit-after" content="7 days" />
+		<meta name="distribution" content="global" />
+		<meta name="rating" content="general" />
+		
+		<!-- Structured Data JSON-LD -->
+		<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+		
+		<!-- Favicon -->
+		<link rel="icon" type="image/svg+xml" href="/icon/icono.svg" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/icon/icono.svg" />
+		
+		<!-- Sitemap -->
+		<link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+		
+		<!-- Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link

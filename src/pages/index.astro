@@ -9,116 +9,71 @@ const phone = "16464272634";
 const message = "Hola, estoy interesado en sus servicios de inmigración.";
 const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
-const successStories = [
-	{
-		name: "María González",
-		country: "México",
-		visa: "Visa U - Aprobada",
-		quote: "Gracias a su apoyo profesional, pude obtener mi visa U. Ahora tengo la tranquilidad que buscaba para mi familia.",
-		image: "/first-woman.jpg"
-	},
-	{
-		name: "Carlos Hernández",
-		country: "Colombia",
-		visa: "I-765 Aprobado",
-		quote: "El proceso fue rápido y transparente. Ahora puedo trabajar legalmente y construir un mejor futuro.",
-		image: "/first-man.jpg"
-	},
-	{
-		name: "Ana Martínez",
-		country: "Venezuela",
-		visa: "VAWA - Aprobada",
-		quote: "Me ayudaron en el momento más difícil de mi vida. Estoy eternamente agradecida por su dedicación.",
-		image: "/second-woman.jpg"
-	},
-	{
-		name: "Luis Pérez",
-		country: "Honduras",
-		visa: "Visa T - Aprobada",
-		quote: "Profesionales comprometidos que realmente se preocupan por sus clientes. Recomendados al 100%.",
-		image: "/second-man.jpg"
-	},
-	{
-      name: 'Lucía Fernández',
-      country: 'Perú',
-      visa: 'Peticiones familiares',
-      image: '/third-woman.jpg',
-	quote: 'Reuní a mi familia después de años de separación. Siempre me mantuvieron informada en cada paso.',
-    }
-];
+// ==========================================
+// GOOGLE REVIEWS CONFIGURATION
+// ==========================================
+// Configura tu Place ID y API Key de Google Maps
+// Place ID: https://developers.google.com/maps/documentation/places/web-service/place-id
+// API Key: https://console.cloud.google.com/apis/credentials
+const googlePlaceId = import.meta.env.GOOGLE_PLACE_ID || "ChIJOwg_06VPwokRYv534QaPC8g";
+const googleApiKey = import.meta.env.GOOGLE_PLACES_API_KEY || "";
+const googleReviewLink = `https://search.google.com/local/writereview?placeid=${googlePlaceId}`;
+const googleMapsLink = `https://www.google.com/maps/place/?q=place_id:${googlePlaceId}`;
 
-const testimonials = [
-	{
-		name: "Roberto Sánchez",
-		role: "Ingeniero Civil - Cliente - Visa U",
-		text: "La mejor decisión que tomé fue confiar en M-Migration. Su equipo me guió en cada paso y ahora trabajo en mi campo profesional en Estados Unidos",
-		rating: 5,
-		image: "/third-man.jpg"
-	},
-	{
-		name: "Isabella Torres",
-		role: "Emprendedora - Cliente - Visa U",
-		text: "Gracias a su experiencia, pude traer a mi familia conmigo. El proceso fue claro y siempre estuvieron disponibles para responder mis dudas.",
-		rating: 5,
-		image: "/fourth-woman.jpg"
-	},
-	{
-		name: "Diego Morales",
-		role: "Chef - Cliente - VAWA",
-		text: "Después de años trabajando sin documentos, M-Migration me ayudó a regularizar mi situación. Ahora tengo mi propio restaurante.",
-		rating: 5,
-		image: "/fourth-man.jpg"
+// Función para obtener reseñas de Google Places API
+interface GoogleReview {
+	author_name: string;
+	author_url?: string;
+	profile_photo_url: string;
+	rating: number;
+	relative_time_description: string;
+	text: string;
+	time: number;
+}
+
+interface PlaceDetails {
+	rating?: number;
+	user_ratings_total?: number;
+	reviews?: GoogleReview[];
+}
+
+let googleReviews: GoogleReview[] = [];
+let placeRating = 5.0;
+let totalReviews = 0;
+
+if (googleApiKey) {
+	try {
+		const response = await fetch(
+			`https://maps.googleapis.com/maps/api/place/details/json?place_id=${googlePlaceId}&fields=rating,user_ratings_total,reviews&reviews_sort=newest&language=es&key=${googleApiKey}`
+		);
+		const data = await response.json();
+		
+		if (data.result) {
+			const result: PlaceDetails = data.result;
+			googleReviews = result.reviews || [];
+			placeRating = result.rating || 5.0;
+			totalReviews = result.user_ratings_total || 0;
+		}
+	} catch (error) {
+		console.error('Error fetching Google Reviews:', error);
 	}
-];
+}
 
+// ==========================================
+// CARGAR COLECCIONES DE CONTENIDO
+// ==========================================
 
-const forms = await getCollection("forms");
+// Noticias (solo activas, ordenadas)
+const newsCollection = await getCollection("news", ({ data }) => data.active);
+const news = newsCollection.sort((a, b) => a.data.order - b.data.order);
 
-// Forms Data
-// const forms = [
-// 	{
-// 		title: "Permiso de Trabajo",
-// 		description: "Formulario I-765",
-// 		href: "/forms/intake-765",
-// 		color: "from-[#87b8c6] to-[#2e707b]",
-// 		icon: "briefcase"
-// 	},
-// 	{
-// 		title: "Protección VAWA",
-// 		description: "Violencia Doméstica",
-// 		href: "/forms/intake-vawa",
-// 		color: "from-[#2e707b] to-[#0f3f4c]",
-// 		icon: "shield"
-// 	},
-// 	{
-// 		title: "Visa U",
-// 		description: "Víctimas de Crimen",
-// 		href: "/forms/intake-visa-u",
-// 		color: "from-[#0f3f4c] to-[#87b8c6]",
-// 		icon: "users"
-// 	},
-// 	{
-// 		title: "Asilo Político",
-// 		description: "Formulario I-589",
-// 		href: "/forms/intake-i589",
-// 		color: "from-[#87b8c6] to-[#2e707b]",
-// 		icon: "home"
-// 	},
-// 	{
-// 		title: "Visa T",
-// 		description: "Víctimas de Trata",
-// 		href: "/forms/intake-visa-t",
-// 		color: "from-[#2e707b] to-[#0f3f4c]",
-// 		icon: "file"
-// 	},
-// 	{
-// 		title: "SIJ",
-// 		description: "Inmigrante Juvenil Especial",
-// 		href: "/forms/intake-sij",
-// 		color: "from-[#0f3f4c] to-[#87b8c6]",
-// 		icon: "help"
-// 	}
-// ];
+// Historias de éxito (solo activas, ordenadas)
+const storiesCollection = await getCollection("stories", ({ data }) => data.active);
+const successStories = storiesCollection.sort((a, b) => a.data.order - b.data.order);
+
+// Servicios (solo activos, ordenados)
+const servicesCollection = await getCollection("services", ({ data }) => data.active);
+const services = servicesCollection.sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout
@@ -140,7 +95,7 @@ const forms = await getCollection("forms");
 		<!-- Content -->
 		<div class="relative z-50 text-center px-4 max-w-6xl mx-auto py-12">
 			<h1
-				class="text-6xl md:text-8xl lg:text-9xl font-bold text-white mb-8 leading-none tracking-tight"
+				class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 md:mb-8 leading-none tracking-tight"
 			>
 				Tu Nuevo
 				<br />
@@ -152,15 +107,15 @@ const forms = await getCollection("forms");
 			</h1>
 
 			<p
-				class="text-xl md:text-2xl text-white/90 mb-12 font-light max-w-3xl mx-auto"
+				class="text-base sm:text-lg md:text-2xl text-white/90 mb-8 md:mb-12 font-light max-w-3xl mx-auto px-2"
 			>
 				Transformamos sueños en realidad. Especialistas en llenado de formularios con más de
 				15 años de experiencia.
 			</p>
 
-			<div class="flex flex-col sm:flex-row gap-6 justify-center mb-20">
+			<div class="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-12 md:mb-20 px-4">
 				<a href={whatsappLink} target="_blank" rel="noopener noreferrer"
-					class="text-lg px-8 py-6 bg-white text-black hover:bg-white/90 rounded-full group transition-colors"
+					class="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 bg-white text-black hover:bg-white/90 rounded-full group transition-colors text-center"
 				>
 					Inicia Tu Proceso
 					<svg
@@ -178,13 +133,13 @@ const forms = await getCollection("forms");
 				</a>
 				<a
 					href={whatsappLink} target="_blank" rel="noopener noreferrer"
-					class="text-lg px-8 py-6 border-2 border-white text-white hover:bg-white/10 rounded-full transition-colors"
+					class="text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 border-2 border-white text-white hover:bg-white/10 rounded-full transition-colors text-center"
 				>
 					Conoce Más
 				</a>
 			</div>
 
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 max-w-5xl mx-auto px-2">
 				{
 					[
 						{ value: "500+", label: "Casos Exitosos" },
@@ -192,15 +147,15 @@ const forms = await getCollection("forms");
 						{ value: "15+", label: "Años" },
 						{ value: "24/7", label: "Soporte" },
 					].map((stat) => (
-						<div class="stat-card group text-center p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 relative overflow-hidden cursor-pointer">
+						<div class="stat-card group text-center p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 relative overflow-hidden cursor-pointer">
 							<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
 								<div class="wave-effect"></div>
 							</div>
 							<div class="relative z-10">
-								<div class="stat-value text-4xl font-bold text-white mb-2 group-hover:scale-110 transition-transform duration-300">
+								<div class="stat-value text-2xl sm:text-4xl font-bold text-white mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">
 									{stat.value}
 								</div>
-								<div class="text-sm text-white/70 group-hover:text-white/90 transition-colors">{stat.label}</div>
+								<div class="text-xs sm:text-sm text-white/70 group-hover:text-white/90 transition-colors">{stat.label}</div>
 							</div>
 						</div>
 					))
@@ -209,105 +164,268 @@ const forms = await getCollection("forms");
 		</div>
 	</section>
 
-	<!-- Servicios Section -->
-	<section id="services-section" class="relative bg-black py-20 overflow-hidden">
-		<!-- Animated Background Grid -->
-		<div class="absolute inset-0 opacity-20">
-			<div
-				id="grid-background"
-				class="absolute inset-0"
-				style="background-image: linear-gradient(to right, rgba(135, 184, 198, 0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(135, 184, 198, 0.1) 1px, transparent 1px); background-size: 60px 60px;"
-			>
+	<!-- News Carousel Section -->
+	<section id="news-section" class="relative bg-black py-8 overflow-hidden border-y border-white/10">
+		<!-- Gradient overlays for smooth fade effect -->
+		<div class="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-black to-transparent z-10 pointer-events-none"></div>
+		<div class="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-black to-transparent z-10 pointer-events-none"></div>
+		
+		<div class="container mx-auto px-4 mb-4">
+			<div class="flex items-center gap-3">
+				<div class="flex items-center gap-2">
+					<span class="relative flex h-3 w-3">
+						<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+						<span class="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
+					</span>
+					<span class="text-secondary font-bold text-sm uppercase tracking-wider">Noticias</span>
+				</div>
 			</div>
 		</div>
 
-		<div class="container mx-auto px-4 relative z-10">
-			<div class="text-center mb-20">
-				<h2
-					id="services-title"
-					class="text-5xl md:text-7xl font-bold text-white mb-6"
-				>
-					Servicios de
-					<span class="text-transparent bg-clip-text bg-linear-to-r from-secondary to-[#0f3f4c]">
-						{' '}Excelencia
-					</span>
-				</h2>
-				<p
-					id="services-subtitle"
-					class="text-xl text-white/70 max-w-3xl mx-auto"
-				>
-					Cada caso es único. Ofrecemos soluciones personalizadas con el más alto nivel de profesionalismo.
-				</p>
-			</div>
-
-			<div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-				{[
-					{
-						title: 'Formularios de Protección',
-						description: 'Llenado de formularios VAWA, Visa U y protección humanitaria',
-						color: 'from-[#87b8c6] to-[#2e707b]',
-						icon: 'shield'
-					},
-					{
-						title: 'Reunificación Familiar',
-						description: 'Ayudamos a reunir a familias separadas por fronteras',
-						color: 'from-[#2e707b] to-[#0f3f4c]',
-						icon: 'users'
-					},
-					{
-						title: 'Permisos de Trabajo',
-						description: 'Tramitación eficiente de formularios I-765 y autorizaciones',
-						color: 'from-[#0f3f4c] to-[#87b8c6]',
-						icon: 'award'
-					},
-					{
-						title: 'Proceso Acelerado',
-						description: 'Reducimos tiempos de espera con gestión profesional',
-						color: 'from-[#87b8c6] to-[#0f3f4c]',
-						icon: 'clock'
-					},
-				].map((service, idx) => (
-					<div
-						class="service-card group relative animate-pulse h-full"
-						data-index={idx}
+		<!-- News Ticker Container -->
+		<div class="news-ticker-wrapper relative">
+			<div id="news-ticker" class="news-ticker flex gap-6">
+				{/* Duplicate news array for seamless infinite scroll */}
+				{[...news, ...news].map((item, idx) => (
+					<button 
+						type="button"
+						class="news-card group shrink-0 w-[280px] sm:w-[350px] md:w-[400px] text-left cursor-pointer"
+						data-index={idx % news.length}
+						data-news-id={item.id}
+						data-news-title={item.data.title}
+						data-news-description={item.data.description}
+						data-news-date={item.data.date}
+						data-news-type={item.data.type}
+						data-news-icon={item.data.icon}
+						data-news-link={item.data.link || ""}
 					>
-						<div class="relative p-8 rounded-3xl bg-linear-to-br from-white/5 to-white/2 backdrop-blur-xl border border-white/10 overflow-hidden transition-all duration-500 hover:border-white/30 hover:shadow-2xl hover:shadow-secondary/20">
-							<div
-								class={`absolute -top-20 -right-20 w-40 h-40 rounded-full bg-linear-to-br ${service.color} opacity-20 blur-3xl transition-all duration-500 group-hover:scale-150`}
-							/>
-
-							<div class="relative z-10">
-								<div class={`inline-flex p-4 rounded-2xl bg-linear-to-br ${service.color} mb-6`}>
-									{service.icon === 'shield' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<div class={`
+							relative p-5 rounded-2xl backdrop-blur-xl border transition-all duration-300
+							${item.data.type === 'urgente' 
+								? 'bg-red-500/10 border-red-500/30 hover:border-red-500/60 hover:bg-red-500/20' 
+								: item.data.type === 'promocion'
+								? 'bg-secondary/10 border-secondary/30 hover:border-secondary/60 hover:bg-secondary/20'
+								: 'bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10'
+							}
+						`}>
+							<div class="flex items-start gap-4">
+								<div class={`
+									shrink-0 w-10 h-10 rounded-xl flex items-center justify-center
+									${item.data.type === 'urgente' 
+										? 'bg-red-500/20' 
+										: item.data.type === 'promocion'
+										? 'bg-secondary/20'
+										: 'bg-white/10'
+									}
+								`}>
+									{item.data.icon === 'megaphone' && (
+										<svg class={`w-5 h-5 ${item.data.type === 'urgente' ? 'text-red-400' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+										</svg>
+									)}
+									{item.data.icon === 'tag' && (
+										<svg class={`w-5 h-5 ${item.data.type === 'promocion' ? 'text-secondary' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+										</svg>
+									)}
+									{item.data.icon === 'document' && (
+										<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+										</svg>
+									)}
+									{item.data.icon === 'location' && (
+										<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+										</svg>
+									)}
+									{item.data.icon === 'shield' && (
+										<svg class={`w-5 h-5 ${item.data.type === 'urgente' ? 'text-red-400' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
 										</svg>
 									)}
-									{service.icon === 'users' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-										</svg>
-									)}
-									{service.icon === 'award' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-										</svg>
-									)}
-									{service.icon === 'clock' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+									{item.data.icon === 'star' && (
+										<svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
 										</svg>
 									)}
 								</div>
+								
+								<div class="flex-1 min-w-0">
+									<div class="flex items-center gap-2 mb-1">
+										{item.data.type === 'urgente' && (
+											<span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-red-500 text-white rounded-full">
+												Urgente
+											</span>
+										)}
+										{item.data.type === 'promocion' && (
+											<span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-secondary text-white rounded-full">
+												Promoción
+											</span>
+										)}
+										<span class="text-[11px] text-white/50">{item.data.date}</span>
+									</div>
+									
+									<h4 class={`font-bold text-sm mb-1 line-clamp-1 ${item.data.type === 'urgente' ? 'text-red-300' : item.data.type === 'promocion' ? 'text-secondary' : 'text-white'}`}>
+										{item.data.title}
+									</h4>
+									<p class="text-white/60 text-xs line-clamp-2 leading-relaxed">
+										{item.data.description}
+									</p>
+								</div>
 
-								<h3 class="text-2xl font-bold text-white mb-4">{service.title}</h3>
-								<p class="text-white/70 leading-relaxed">{service.description}</p>
+								<svg class="w-4 h-4 text-white/40 group-hover:text-white/80 group-hover:translate-x-1 transition-all shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+								</svg>
+							</div>
+						</div>
+					</button>
+				))}
+			</div>
+		</div>
+		
+		<!-- Hidden data for news body content -->
+		<script id="news-data" type="application/json" set:html={JSON.stringify(news.map(n => ({ id: n.id, body: n.body })))}></script>
+
+		<style>
+			.news-ticker-wrapper {
+				overflow: hidden;
+				mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+				-webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+			}
+			
+			.news-ticker {
+				animation: ticker 80s linear infinite;
+				width: max-content;
+				will-change: transform;
+				-webkit-backface-visibility: hidden;
+				backface-visibility: hidden;
+				-webkit-perspective: 1000;
+				perspective: 1000;
+			}
+			
+			.news-ticker:hover {
+				animation-play-state: paused;
+			}
+			
+			@keyframes ticker {
+				0% {
+					-webkit-transform: translate3d(0, 0, 0);
+					transform: translate3d(0, 0, 0);
+				}
+				100% {
+					-webkit-transform: translate3d(-50%, 0, 0);
+					transform: translate3d(-50%, 0, 0);
+				}
+			}
+			
+			.line-clamp-1 {
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+			
+			.line-clamp-2 {
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+		</style>
+	</section>
+
+	<!-- Services Section -->
+	<section id="services-section" class="relative bg-gradient-to-b from-black via-[#0a2a33] to-black py-16 md:py-24 overflow-hidden">
+		<!-- Background Pattern -->
+		<div class="absolute inset-0 opacity-5">
+			<div 
+				class="absolute inset-0"
+				style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 40px 40px;"
+			></div>
+		</div>
+		
+		<!-- Decorative Elements -->
+		<div class="absolute top-20 left-10 w-72 h-72 bg-secondary/10 rounded-full blur-3xl"></div>
+		<div class="absolute bottom-20 right-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+
+		<div class="container mx-auto px-4 relative z-10">
+			<!-- Header -->
+			<div class="text-center mb-10 md:mb-16 px-2">
+				<span class="inline-block px-3 sm:px-4 py-2 bg-secondary/20 text-secondary rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6">
+					¿Qué Hacemos?
+				</span>
+				<h2 class="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-4 sm:mb-6">
+					Nuestros
+					<span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">
+						Servicios
+					</span>
+				</h2>
+				<p class="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto">
+					Brindamos servicios migratorios confiables, accesibles y eficientes para ayudarte en cada paso de tu proceso.
+				</p>
+			</div>
+
+			<!-- Services Grid -->
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-6xl mx-auto px-2">
+				{services.map((service, idx) => (
+					<div 
+						class="service-card group"
+						style={`animation-delay: ${idx * 50}ms`}
+					>
+						<div class="relative p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 hover:border-secondary/50 transition-all duration-300 hover:shadow-lg hover:shadow-secondary/10 hover:-translate-y-1">
+							<!-- Check Icon -->
+							<div class="flex items-center gap-3 sm:gap-4">
+								<div class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-secondary/30 to-primary/30 border border-secondary/50 flex items-center justify-center group-hover:scale-110 transition-transform">
+									<svg class="w-4 h-4 sm:w-5 sm:h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+									</svg>
+								</div>
+								
+								<div class="flex-1 min-w-0">
+									<h3 class="text-white font-semibold text-sm sm:text-base group-hover:text-secondary transition-colors line-clamp-2">
+										{service.data.title}
+									</h3>
+								</div>
 							</div>
 						</div>
 					</div>
 				))}
 			</div>
+
+			<!-- CTA Button -->
+			<div class="text-center mt-8 md:mt-12 px-4">
+				<a 
+					href={whatsappLink}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-secondary to-primary text-white font-bold rounded-full hover:shadow-lg hover:shadow-secondary/30 transition-all group text-sm sm:text-base"
+				>
+					<span>Atención Gratis</span>
+					<svg class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+					</svg>
+				</a>
+			</div>
 		</div>
+
+		<style>
+			.service-card {
+				animation: fadeInUp 0.5s ease-out forwards;
+				opacity: 0;
+			}
+			
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+		</style>
 	</section>
 
 	<!-- Video Transition Section -->
@@ -341,16 +459,19 @@ const forms = await getCollection("forms");
 		</div>
 	</section>
 
-	<!-- Horizontal Carousel Section -->
-	<section class="relative bg-linear-to-b from-black via-[#0f3f4c]/20 to-black py-32 overflow-hidden">
-		<div class="container mx-auto px-4 mb-12">
-			<div class="flex items-center justify-between mb-8">
+	<!-- Horizontal Carousel Section - Historias de Éxito -->
+	<section id="stories-section" class="relative bg-linear-to-b from-black via-[#0f3f4c]/20 to-black py-16 md:py-32 overflow-hidden">
+		<div class="container mx-auto px-4 mb-8 md:mb-12">
+			<div class="flex flex-col md:flex-row md:items-center justify-between mb-6 md:mb-8 gap-4">
 				<div>
-					<h2 class="text-5xl md:text-7xl font-bold text-white mb-4">
+					<h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-2 md:mb-4">
 						Historias de Éxito
 					</h2>
-					<p class="text-xl text-white/70">
+					<p class="text-base sm:text-lg md:text-xl text-white/70">
 						Conoce a quienes ya lograron su sueño americano
+					</p>
+					<p class="text-xs sm:text-sm text-white/40 mt-2 italic">
+						* Las imágenes mostradas no corresponden a las personas reales por confidencialidad y protección de procesos en curso.
 					</p>
 				</div>
 
@@ -377,36 +498,36 @@ const forms = await getCollection("forms");
 
 		<div
 			id="stories-scroll"
-			class="flex gap-8 px-4 overflow-x-auto snap-x snap-mandatory"
+			class="flex gap-4 sm:gap-6 md:gap-8 px-4 overflow-x-auto snap-x snap-mandatory"
 			style="scrollbar-width: none; -ms-overflow-style: none;"
 		>
-			<div class="w-20 shrink-0"></div>
+			<div class="w-4 sm:w-10 md:w-20 shrink-0"></div>
 			{successStories.map((story) => (
-				<div class="shrink-0 w-[85vw] md:w-[600px] snap-center group">
-					<div class="relative h-[500px] rounded-3xl overflow-hidden">
+				<div class="shrink-0 w-[80vw] sm:w-[70vw] md:w-[600px] snap-center group">
+					<div class="relative h-[400px] sm:h-[450px] md:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden">
 						<img
-							src={story.image}
-							alt={story.name}
+							src={story.data.image}
+							alt={story.data.name}
 							class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
 						/>
 						<div class="absolute inset-0 bg-linear-to-t from-black via-black/50 to-transparent"></div>
 
-						<div class="absolute bottom-0 left-0 right-0 p-8">
-							<div class="inline-block px-4 py-2 rounded-full bg-linear-to-r from-secondary to-primary text-white text-sm font-semibold mb-4">
-								{story.visa}
+						<div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
+							<div class="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r from-secondary to-primary text-white text-xs sm:text-sm font-semibold mb-2 sm:mb-4">
+								{story.data.visa}
 							</div>
-							<p class="text-white/90 text-lg mb-6 leading-relaxed italic">
-								"{story.quote}"
+							<p class="text-white/90 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 leading-relaxed italic line-clamp-3 sm:line-clamp-none">
+								"{story.data.quote}"
 							</p>
 							<div>
-								<div class="text-white font-bold text-xl">{story.name}</div>
-								<div class="text-white/70">{story.country}</div>
+								<div class="text-white font-bold text-base sm:text-lg md:text-xl">{story.data.name}</div>
+								<div class="text-white/70 text-sm sm:text-base">{story.data.country}</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			))}
-			<div class="w-20 shrink-0"></div>
+			<div class="w-4 sm:w-10 md:w-20 shrink-0"></div>
 		</div>
 
 		<style>
@@ -417,13 +538,13 @@ const forms = await getCollection("forms");
 	</section>
 
 	<!-- Process Reveal Section -->
-	<section id="process-section" class="relative bg-black py-32 overflow-hidden">
+	<section id="process-section" class="relative bg-black py-16 md:py-32 overflow-hidden">
 		<div class="container mx-auto px-4">
-			<div class="text-center mb-20">
-				<h2 class="text-5xl md:text-7xl font-bold text-white mb-6">
+			<div class="text-center mb-12 md:mb-20">
+				<h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-4 md:mb-6">
 					Nuestro Proceso
 				</h2>
-				<p class="text-xl text-white/70 max-w-3xl mx-auto">
+				<p class="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto px-2">
 					Simple, transparente y diseñado para tu tranquilidad
 				</p>
 			</div>
@@ -516,8 +637,8 @@ const forms = await getCollection("forms");
 		</div>
 	</section>
 
-	<!-- Parallax Testimonials Section -->
-	<section id="testimonials-section" class="relative bg-linear-to-b from-black to-[#0f3f4c]/30 py-32 overflow-hidden">
+	<!-- Parallax Testimonials Section - Google Reviews -->
+	<section id="testimonials-section" class="relative bg-linear-to-b from-black to-[#0f3f4c]/30 py-16 md:py-32 overflow-hidden">
 		<!-- Animated Background -->
 		<div class="absolute inset-0">
 			<div
@@ -529,189 +650,218 @@ const forms = await getCollection("forms");
 		</div>
 
 		<div class="container mx-auto px-4 relative z-10">
-			<div class="text-center mb-20">
-				<h2 class="text-5xl md:text-7xl font-bold text-white mb-6">
+			<div class="text-center mb-8 md:mb-12">
+				<h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-4 md:mb-6">
 					Lo Que Dicen
 					<br />
 					<span class="text-transparent bg-clip-text bg-linear-to-r from-secondary to-primary">
 						Nuestros Clientes
 					</span>
 				</h2>
+				
+				<!-- Google Reviews Badge with Real Rating -->
+				<div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+					<a 
+						href={googleMapsLink}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-3 px-6 py-3 bg-white/10 backdrop-blur-xl rounded-full border border-white/20 hover:bg-white/20 transition-all group"
+					>
+						<!-- Google Logo -->
+						<svg class="w-6 h-6" viewBox="0 0 24 24">
+							<path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+							<path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+							<path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+							<path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+						</svg>
+						<div class="flex items-center gap-1">
+							<div class="flex">
+								{[1,2,3,4,5].map((star) => (
+									<svg class={`w-4 h-4 ${star <= Math.round(placeRating) ? 'text-yellow-400' : 'text-gray-500'} fill-current`} viewBox="0 0 24 24">
+										<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+									</svg>
+								))}
+							</div>
+							<span class="text-white font-semibold ml-2">{placeRating.toFixed(1)}</span>
+							{totalReviews > 0 && (
+								<span class="text-white/50 text-sm ml-1">({totalReviews} reseñas)</span>
+							)}
+						</div>
+						<span class="text-white/70 text-sm">Ver en Google</span>
+						<svg class="w-4 h-4 text-white/50 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+						</svg>
+					</a>
+				</div>
 			</div>
 
-			<div class="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-				{testimonials.map((testimonial, idx) => (
-					<div class="testimonial-card" data-index={idx}>
-						<div class="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 group">
-							<!-- Quote Mark -->
-							<div class="text-8xl text-secondary/20 font-serif absolute top-4 left-4">
-								"
-							</div>
-
-							<div class="relative z-10 pt-8">
-								<!-- Stars -->
-								<div class="flex gap-1 mb-6">
-									{[...Array(testimonial.rating)].map(() => (
-										<svg class="w-5 h-5 fill-secondary text-secondary" viewBox="0 0 24 24" fill="currentColor">
-											<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-										</svg>
-									))}
+			{/* Show Google Reviews if available, otherwise show configuration message */}
+			{googleReviews.length > 0 ? (
+				<div class="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+					{googleReviews.slice(0, 6).map((review, idx) => (
+						<div class="testimonial-card" data-index={idx}>
+							<div class="relative p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 transition-all duration-500 hover:shadow-2xl hover:shadow-secondary/20 group h-full">
+								<!-- Google Badge -->
+								<a 
+									href={review.author_url || googleMapsLink}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="absolute top-4 right-4 hover:opacity-100 transition-opacity"
+								>
+									<svg class="w-6 h-6 opacity-70 hover:opacity-100" viewBox="0 0 24 24">
+										<path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+										<path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+										<path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+										<path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+									</svg>
+								</a>
+								
+								<!-- Quote Mark -->
+								<div class="text-8xl text-secondary/20 font-serif absolute top-4 left-4">
+									"
 								</div>
 
-								<!-- Testimonial Text -->
-								<p class="text-white/90 text-lg leading-relaxed mb-8">
-									{testimonial.text}
-								</p>
+								<div class="relative z-10 pt-8">
+									<!-- Stars -->
+									<div class="flex gap-1 mb-4">
+										{[1,2,3,4,5].map((star) => (
+											<svg class={`w-5 h-5 ${star <= review.rating ? 'fill-secondary text-secondary' : 'fill-gray-600 text-gray-600'}`} viewBox="0 0 24 24">
+												<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+											</svg>
+										))}
+									</div>
+									
+									<!-- Time -->
+									<div class="text-white/40 text-xs mb-4">
+										{review.relative_time_description}
+									</div>
 
-								<!-- Author -->
-								<div class="flex items-center gap-4">
-									<img
-										src={testimonial.image}
-										alt={testimonial.name}
-										class="w-14 h-14 rounded-full object-cover border-2 border-secondary"
-									/>
-									<div>
-										<div class="text-white font-bold">{testimonial.name}</div>
-										<div class="text-white/60 text-sm">{testimonial.role}</div>
+									<!-- Review Text -->
+									<p class="text-white/90 text-lg leading-relaxed mb-8 line-clamp-4">
+										{review.text || "Excelente servicio."}
+									</p>
+
+									<!-- Author -->
+									<div class="flex items-center gap-4">
+										<img
+											src={review.profile_photo_url || "/default-avatar.png"}
+											alt={review.author_name}
+											class="w-14 h-14 rounded-full object-cover border-2 border-secondary"
+											onerror="this.src='/default-avatar.png'"
+										/>
+										<div>
+											<div class="text-white font-bold">{review.author_name}</div>
+											<div class="text-white/60 text-sm">Cliente verificado en Google</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+					))}
+				</div>
+			) : (
+				<!-- Message when API is not configured -->
+				<div class="max-w-2xl mx-auto">
+					<div class="text-center p-12 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10">
+						<svg class="w-16 h-16 mx-auto mb-6 text-secondary" viewBox="0 0 24 24">
+							<path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+							<path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+							<path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+							<path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+						</svg>
+						<h3 class="text-2xl font-bold text-white mb-4">Comentarios</h3>
+						<p class="text-white/70 mb-6">
+							 NO DISPONIBLE EN ESTE MOMENTO
+						</p>
+						<a 
+							href={googleMapsLink}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+						>
+							Ver nuestras reseñas en Google
+							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+							</svg>
+						</a>
 					</div>
-				))}
-			</div>
-		</div>
-	</section>
-
-	<!-- Forms Showcase Section -->
-	<section id="forms-section" class="relative bg-black py-32 overflow-hidden">
-		<!-- Animated Gradient Background -->
-		<div class="absolute inset-0">
-			<div
-				id="forms-gradient-bg"
-				class="absolute inset-0 opacity-30"
-			>
-			</div>
-		</div>
-
-		<div class="container mx-auto px-4 relative z-10">
-			<div class="text-center mb-20">
-				<h2 class="text-5xl md:text-7xl font-bold text-white mb-6">
-					Comienza Tu Proceso
-				</h2>
-				<p class="text-xl text-white/70 max-w-3xl mx-auto">
-					Llena el formulario que aplique a tu caso y nos pondremos en contacto contigo
-				</p>
-			</div>
-
-			<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-				{forms.map((form, idx) => (
-					<a
-						href={`/formularios/${form.slug}`}
-						class="form-card group"
-						data-index={idx}
+				</div>
+			)}
+			
+			<!-- Call to Action - Leave a Review -->
+			<div class="mt-16 text-center">
+				<div class="inline-flex flex-col sm:flex-row items-center gap-4 p-6 rounded-3xl bg-gradient-to-r from-white/5 to-white/10 backdrop-blur-xl border border-white/10">
+					<div class="text-center sm:text-left">
+						<h4 class="text-xl font-bold text-white mb-1">¿Ya fuiste nuestro cliente?</h4>
+						<p class="text-white/60 text-sm">Tu opinión nos ayuda a mejorar y ayuda a otros a tomar mejores decisiones</p>
+					</div>
+					<a 
+						href={googleReviewLink}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-secondary to-primary text-white font-bold rounded-full hover:shadow-lg hover:shadow-secondary/30 transition-all group whitespace-nowrap"
 					>
-						<div class="relative h-64 rounded-3xl overflow-hidden transition-all duration-500 group-hover:scale-105">
-							<div class={`absolute inset-0 bg-linear-to-br ${form.data.color} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
-
-							<div class="relative z-10 h-full flex flex-col items-center justify-center p-8 text-center">
-								<div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-									{form.data.icon === 'briefcase' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-										</svg>
-									)}
-									{form.data.icon === 'shield' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-										</svg>
-									)}
-									{form.data.icon === 'users' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-										</svg>
-									)}
-									{form.data.icon === 'home' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-										</svg>
-									)}
-									{form.data.icon === 'file' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-										</svg>
-									)}
-									{form.data.icon === 'help' && (
-										<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-										</svg>
-									)}
-								</div>
-
-								<h3 class="text-2xl font-bold text-white mb-2">{form.data.title}</h3>
-								<p class="text-white/80 mb-6">{form.data.description}</p>
-
-								<div class="inline-flex items-center gap-2 text-white font-semibold group-hover:gap-4 transition-all">
-									Llenar formulario
-									<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-									</svg>
-								</div>
-							</div>
-						</div>
+						<svg class="w-5 h-5" viewBox="0 0 24 24">
+							<path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+							<path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+							<path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+							<path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+						</svg>
+						Dejar una Reseña
+						<svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+						</svg>
 					</a>
-				))}
+				</div>
 			</div>
 		</div>
 	</section>
 
 	<!-- Final CTA Section -->
-	<section class="relative bg-linear-to-br from-[#0f3f4c] via-primary to-secondary py-32 overflow-hidden">
+	<section class="relative bg-linear-to-br from-[#0f3f4c] via-primary to-secondary py-16 md:py-32 overflow-hidden">
 		<div class="absolute inset-0 opacity-20">
-			<div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
-			<div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 1000ms;"></div>
+			<div class="absolute top-0 left-0 w-48 sm:w-72 md:w-96 h-48 sm:h-72 md:h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
+			<div class="absolute bottom-0 right-0 w-48 sm:w-72 md:w-96 h-48 sm:h-72 md:h-96 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 1000ms;"></div>
 		</div>
 
 		<div class="container mx-auto px-4 relative z-10">
 			<div class="max-w-4xl mx-auto text-center">
-				<h2 class="text-5xl md:text-7xl font-bold text-white mb-8">
+				<h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 md:mb-8">
 					¿Listo Para Comenzar?
 				</h2>
-				<p class="text-2xl text-white/90 mb-12 leading-relaxed">
+				<p class="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 md:mb-12 leading-relaxed px-2">
 					Tu futuro en Estados Unidos está más cerca de lo que piensas.
-					<br />
-					Contáctanos hoy mismo.
+					<br class="hidden sm:block" />
+					<span class="sm:hidden"> </span>Contáctanos hoy mismo.
 				</p>
 
-				<div class="flex flex-col sm:flex-row gap-6 justify-center mb-16">
+				<div class="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-10 md:mb-16 px-4">
 					<a
 						href={whatsappLink} target="_blank" rel="noopener noreferrer"
-						class="text-lg px-20 py-7 bg-white text-[#0f3f4c] hover:bg-white/90 rounded-full group font-bold transition-colors inline-block"
+						class="text-base sm:text-lg px-8 sm:px-12 md:px-20 py-4 sm:py-5 md:py-7 bg-white text-[#0f3f4c] hover:bg-white/90 rounded-full group font-bold transition-colors inline-block text-center"
 					>
 						Contacto Gratuito
-						<svg class="inline-block ml-2 h-6 w-6 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<svg class="inline-block ml-2 h-5 w-5 sm:h-6 sm:w-6 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
 						</svg>
 					</a>
 				</div>
 
 				<!-- Contact Info -->
-				<div class="flex flex-col md:flex-row gap-8 justify-center items-center">
+				<div class="flex flex-col sm:flex-row gap-6 sm:gap-8 justify-center items-center">
 					<a
 						href={whatsappLink} target="_blank" rel="noopener noreferrer"
 						class="flex items-center gap-3 text-white hover:text-white/80 transition-colors group"
 					>
-						<div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
-							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+							<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
 							</svg>
 						</div>
 						<div class="text-left">
-							<div class="text-sm text-white/70">Llámanos</div>
-							<div class="text-lg font-semibold">
-								<a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-									+1 (646) 427-2634
-								</a>
+							<div class="text-xs sm:text-sm text-white/70">Llámanos</div>
+							<div class="text-base sm:text-lg font-semibold">
+								+1 (646) 427-2634
 							</div>
 						</div>
 					</a>
@@ -720,14 +870,14 @@ const forms = await getCollection("forms");
 						href="mailto:m-migration@outlook.com"
 						class="flex items-center gap-3 text-white hover:text-white/80 transition-colors group"
 					>
-						<div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
-							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+							<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
 							</svg>
 						</div>
 						<div class="text-left">
-							<div class="text-sm text-white/70">Escríbenos</div>
-							<a href="mailto:m-migration@outlook.com" class="text-lg font-semibold">m-migration@outlook.com</a>
+							<div class="text-xs sm:text-sm text-white/70">Escríbenos</div>
+							<span class="text-base sm:text-lg font-semibold">m-migration@outlook.com</span>
 						</div>
 					</a>
 				</div>
@@ -735,9 +885,219 @@ const forms = await getCollection("forms");
 		</div>
 	</section>
 
+	<!-- News Modal -->
+	<div id="news-modal" class="fixed inset-0 z-[9999] hidden">
+		<!-- Backdrop -->
+		<div id="news-modal-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+		
+		<!-- Modal Container -->
+		<div class="absolute inset-0 flex items-center justify-center p-4 overflow-y-auto">
+			<div id="news-modal-content" class="relative w-full max-w-2xl bg-gradient-to-br from-[#0f1a1d] to-[#0a1214] rounded-3xl border border-white/10 shadow-2xl transform scale-95 opacity-0 transition-all duration-300">
+				<!-- Close Button -->
+				<button 
+					id="news-modal-close" 
+					type="button"
+					class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors z-10"
+				>
+					<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+					</svg>
+				</button>
+				
+				<!-- Modal Header -->
+				<div class="p-6 pb-4 border-b border-white/10">
+					<div class="flex items-start gap-4">
+						<!-- Icon -->
+						<div id="news-modal-icon" class="shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center bg-white/10">
+							<!-- Icon will be inserted here -->
+						</div>
+						
+						<div class="flex-1 min-w-0 pr-8">
+							<!-- Badge & Date -->
+							<div class="flex items-center gap-2 mb-2">
+								<span id="news-modal-badge" class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full"></span>
+								<span id="news-modal-date" class="text-sm text-white/50"></span>
+							</div>
+							
+							<!-- Title -->
+							<h3 id="news-modal-title" class="text-2xl md:text-3xl font-bold text-white leading-tight"></h3>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Modal Body -->
+				<div class="p-6">
+					<p id="news-modal-description" class="text-lg text-white/80 leading-relaxed mb-4"></p>
+					<div id="news-modal-body" class="prose prose-invert prose-sm max-w-none text-white/70 leading-relaxed"></div>
+				</div>
+				
+				<!-- Modal Footer -->
+				<div id="news-modal-footer" class="p-6 pt-4 border-t border-white/10 hidden">
+					<a 
+						id="news-modal-link" 
+						href="#" 
+						class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-secondary to-primary text-white font-semibold rounded-full hover:shadow-lg hover:shadow-secondary/30 transition-all"
+					>
+						<span>Ver más información</span>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+						</svg>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<Footer slot="footer" />
 </Layout>
 
 <script>
 	import '../lib/home-animations.ts';
+	
+	// News Modal functionality
+	document.addEventListener('DOMContentLoaded', () => {
+		const modal = document.getElementById('news-modal');
+		const modalBackdrop = document.getElementById('news-modal-backdrop');
+		const modalContent = document.getElementById('news-modal-content');
+		const modalClose = document.getElementById('news-modal-close');
+		const modalIcon = document.getElementById('news-modal-icon');
+		const modalBadge = document.getElementById('news-modal-badge');
+		const modalDate = document.getElementById('news-modal-date');
+		const modalTitle = document.getElementById('news-modal-title');
+		const modalDescription = document.getElementById('news-modal-description');
+		const modalBody = document.getElementById('news-modal-body');
+		const modalFooter = document.getElementById('news-modal-footer');
+		const modalLink = document.getElementById('news-modal-link') as HTMLAnchorElement;
+		
+		// Get news body data
+		const newsDataScript = document.getElementById('news-data');
+		const newsBodyData: { id: string; body: string }[] = newsDataScript ? JSON.parse(newsDataScript.textContent || '[]') : [];
+		
+		// Icon SVGs
+		const icons: Record<string, string> = {
+			megaphone: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>`,
+			tag: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>`,
+			document: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>`,
+			location: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
+			shield: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>`,
+			star: `<svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>`
+		};
+		
+		function openModal(newsCard: HTMLElement) {
+			const newsId = newsCard.dataset.newsId || '';
+			const title = newsCard.dataset.newsTitle || '';
+			const description = newsCard.dataset.newsDescription || '';
+			const date = newsCard.dataset.newsDate || '';
+			const type = newsCard.dataset.newsType || 'noticia';
+			const icon = newsCard.dataset.newsIcon || 'document';
+			const link = newsCard.dataset.newsLink || '';
+			
+			// Find body content
+			const newsItem = newsBodyData.find(n => n.id === newsId);
+			const body = newsItem?.body || '';
+			
+			// Set icon
+			if (modalIcon) {
+				modalIcon.innerHTML = icons[icon] || icons.document;
+				modalIcon.className = 'shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center';
+				if (type === 'urgente') {
+					modalIcon.classList.add('bg-red-500/20', 'text-red-400');
+				} else if (type === 'promocion') {
+					modalIcon.classList.add('bg-secondary/20', 'text-secondary');
+				} else {
+					modalIcon.classList.add('bg-white/10', 'text-white');
+				}
+			}
+			
+			// Set badge
+			if (modalBadge) {
+				if (type === 'urgente') {
+					modalBadge.textContent = 'Urgente';
+					modalBadge.className = 'px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-red-500 text-white';
+				} else if (type === 'promocion') {
+					modalBadge.textContent = 'Promoción';
+					modalBadge.className = 'px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-secondary text-white';
+				} else if (type === 'empresa') {
+					modalBadge.textContent = 'Empresa';
+					modalBadge.className = 'px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-primary text-white';
+				} else {
+					modalBadge.textContent = 'Noticia';
+					modalBadge.className = 'px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-white/20 text-white';
+				}
+			}
+			
+			// Set content
+			if (modalDate) modalDate.textContent = date;
+			if (modalTitle) {
+				modalTitle.textContent = title;
+				modalTitle.className = 'text-2xl md:text-3xl font-bold leading-tight';
+				if (type === 'urgente') {
+					modalTitle.classList.add('text-red-300');
+				} else if (type === 'promocion') {
+					modalTitle.classList.add('text-secondary');
+				} else {
+					modalTitle.classList.add('text-white');
+				}
+			}
+			if (modalDescription) modalDescription.textContent = description;
+			if (modalBody) modalBody.textContent = body;
+			
+			// Set link
+			if (modalFooter && modalLink) {
+				if (link && link !== '#') {
+					modalFooter.classList.remove('hidden');
+					modalLink.href = link;
+				} else {
+					modalFooter.classList.add('hidden');
+				}
+			}
+			
+			// Show modal
+			if (modal) {
+				modal.classList.remove('hidden');
+				document.body.style.overflow = 'hidden';
+				
+				// Animate in
+				requestAnimationFrame(() => {
+					if (modalContent) {
+						modalContent.classList.remove('scale-95', 'opacity-0');
+						modalContent.classList.add('scale-100', 'opacity-100');
+					}
+				});
+			}
+		}
+		
+		function closeModal() {
+			if (modalContent) {
+				modalContent.classList.remove('scale-100', 'opacity-100');
+				modalContent.classList.add('scale-95', 'opacity-0');
+			}
+			
+			setTimeout(() => {
+				if (modal) {
+					modal.classList.add('hidden');
+					document.body.style.overflow = '';
+				}
+			}, 300);
+		}
+		
+		// Event listeners for news cards
+		document.querySelectorAll('.news-card').forEach(card => {
+			card.addEventListener('click', (e) => {
+				e.preventDefault();
+				openModal(card as HTMLElement);
+			});
+		});
+		
+		// Close modal events
+		modalClose?.addEventListener('click', closeModal);
+		modalBackdrop?.addEventListener('click', closeModal);
+		
+		// Close on Escape key
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+				closeModal();
+			}
+		});
+	});
 </script>

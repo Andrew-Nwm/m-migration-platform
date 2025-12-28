@@ -1,0 +1,288 @@
+---
+interface Column {
+	name: string;
+	label: string;
+	type: "text" | "number" | "date" | "select" | "tel" | "email";
+	placeholder?: string;
+	options?: string[];
+	required?: boolean;
+}
+
+interface Props {
+	name: string;
+	label: string;
+	columns: Column[];
+	required?: boolean;
+	minRows?: number;
+	maxRows?: number;
+}
+
+const { name, label, columns, required = false, minRows = 0, maxRows = 10 } = Astro.props;
+---
+
+<div 
+	class="table-field-container overflow-x-auto" 
+	data-field-name={name}
+	data-columns={JSON.stringify(columns)}
+	data-min-rows={minRows}
+	data-max-rows={maxRows}
+	data-required={required}
+>
+	<div class="flex items-center justify-between mb-4">
+		<label class="block text-white font-semibold text-lg">
+			{label}
+			{required && <span class="text-secondary ml-1">*</span>}
+		</label>
+		<button
+			type="button"
+			class="add-row-btn flex items-center gap-2 px-4 py-2 bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/30 rounded-lg transition-all text-sm font-medium"
+		>
+			<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+			</svg>
+			Agregar fila
+		</button>
+	</div>
+
+	<!-- Encabezados de la tabla (solo en desktop) -->
+	<div 
+		class="table-headers hidden md:grid gap-2 mb-2 px-4" 
+		style={`grid-template-columns: repeat(${columns.length}, minmax(120px, 1fr)) 40px; min-width: ${(columns.length * 120) + 40}px;`}
+	>
+		{columns.map((col) => (
+			<span class="text-white/60 text-sm font-medium truncate">
+				{col.label}
+				{col.required && <span class="text-secondary">*</span>}
+			</span>
+		))}
+		<span></span>
+	</div>
+
+	<!-- Contenedor de filas -->
+	<div class="table-rows space-y-3">
+		<!-- Las filas se agregan dinámicamente via JavaScript -->
+	</div>
+
+	<!-- Mensaje cuando no hay filas -->
+	<div class="empty-message text-center py-8 border-2 border-dashed border-white/20 rounded-xl">
+		<svg class="w-12 h-12 mx-auto text-white/30 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+		</svg>
+		<p class="text-white/50 text-sm">No hay registros. Haga clic en "Agregar fila" para comenzar.</p>
+	</div>
+
+	<!-- Input oculto para enviar los datos como JSON -->
+	<input type="hidden" name={name} class="table-data-input" value="[]" />
+</div>
+
+<style>
+	.table-field-container {
+		animation: fadeInUp 0.5s ease-out;
+	}
+
+	.table-row {
+		animation: slideIn 0.3s ease-out;
+	}
+
+	/* Ocultar labels en desktop ya que hay encabezados */
+	@media (min-width: 768px) {
+		.field-label-mobile {
+			display: none;
+		}
+	}
+
+	/* En mobile: mostrar labels y stack vertical */
+	@media (max-width: 767px) {
+		.table-row-grid {
+			display: flex !important;
+			flex-direction: column !important;
+			gap: 1rem !important;
+		}
+		
+		.field-label-mobile {
+			display: block;
+		}
+	}
+
+	@keyframes slideIn {
+		from {
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+</style>
+
+<script>
+	// Inicializar todas las tablas dinámicas
+	document.querySelectorAll('.table-field-container').forEach((container) => {
+		const fieldName = container.getAttribute('data-field-name');
+		const columns = JSON.parse(container.getAttribute('data-columns') || '[]');
+		const minRows = parseInt(container.getAttribute('data-min-rows') || '0');
+		const maxRows = parseInt(container.getAttribute('data-max-rows') || '10');
+		const isRequired = container.getAttribute('data-required') === 'true';
+		
+		const rowsContainer = container.querySelector('.table-rows');
+		const emptyMessage = container.querySelector('.empty-message');
+		const addRowBtn = container.querySelector('.add-row-btn');
+		const dataInput = container.querySelector('.table-data-input') as HTMLInputElement;
+		
+		let rowCount = 0;
+		
+		function createRow(): HTMLElement {
+			const row = document.createElement('div');
+			row.className = 'table-row bg-white/5 border border-white/10 rounded-xl p-4 hover:border-white/20 transition-all';
+			row.setAttribute('data-row-index', rowCount.toString());
+			
+			// Crear estructura del grid con estilos inline para evitar problemas con Tailwind dinámico
+			const gridCols = columns.length;
+			// Calcular ancho mínimo por columna (120px mínimo por columna + 40px para botón)
+			const minWidth = (gridCols * 120) + 40;
+			const gridStyle = `display: grid; grid-template-columns: repeat(${gridCols}, minmax(120px, 1fr)) 40px; gap: 0.5rem; align-items: start; min-width: ${minWidth}px;`;
+			
+			row.innerHTML = `
+				<div class="table-row-grid" style="${gridStyle}">
+					${columns.map((col: any, idx: number) => `
+						<div class="field-cell">
+							<label class="field-label-mobile text-white/60 text-xs mb-1">
+								${col.label}${col.required ? ' *' : ''}
+							</label>
+							${renderInput(col, rowCount, idx)}
+						</div>
+					`).join('')}
+					<div class="flex items-start justify-center pt-6">
+						<button
+							type="button"
+							class="remove-row-btn p-2 text-white/50 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+							title="Eliminar fila"
+						>
+							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+							</svg>
+						</button>
+					</div>
+				</div>
+			`;
+			
+			rowCount++;
+			return row;
+		}
+		
+		function renderInput(col: any, rowIdx: number, colIdx: number): string {
+			const inputName = `${fieldName}_${rowIdx}_${col.name}`;
+			const baseClasses = 'w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all text-sm';
+			
+			switch (col.type) {
+				case 'select':
+					return `
+						<select name="${inputName}" class="${baseClasses}" ${col.required ? 'required' : ''}>
+							<option value="" class="bg-[#0f3f4c]">${col.placeholder || 'Seleccione...'}</option>
+							${(col.options || []).map((opt: string) => `
+								<option value="${opt}" class="bg-[#0f3f4c]">${opt}</option>
+							`).join('')}
+						</select>
+					`;
+				case 'date':
+					return `<input type="date" name="${inputName}" class="${baseClasses}" ${col.required ? 'required' : ''} />`;
+				case 'number':
+					return `<input type="number" name="${inputName}" placeholder="${col.placeholder || ''}" class="${baseClasses}" ${col.required ? 'required' : ''} />`;
+				case 'tel':
+					return `<input type="tel" name="${inputName}" placeholder="${col.placeholder || ''}" class="${baseClasses}" ${col.required ? 'required' : ''} />`;
+				case 'email':
+					return `<input type="email" name="${inputName}" placeholder="${col.placeholder || ''}" class="${baseClasses}" ${col.required ? 'required' : ''} />`;
+				default:
+					return `<input type="text" name="${inputName}" placeholder="${col.placeholder || ''}" class="${baseClasses}" ${col.required ? 'required' : ''} />`;
+			}
+		}
+		
+		function updateVisibility() {
+			const rows = rowsContainer?.querySelectorAll('.table-row');
+			const hasRows = rows && rows.length > 0;
+			
+			if (emptyMessage) {
+				emptyMessage.classList.toggle('hidden', hasRows);
+			}
+			
+			// Deshabilitar botón si llegamos al máximo
+			if (addRowBtn && rows) {
+				(addRowBtn as HTMLButtonElement).disabled = rows.length >= maxRows;
+				addRowBtn.classList.toggle('opacity-50', rows.length >= maxRows);
+				addRowBtn.classList.toggle('cursor-not-allowed', rows.length >= maxRows);
+			}
+		}
+		
+		function collectData(): any[] {
+			const rows = rowsContainer?.querySelectorAll('.table-row');
+			const data: any[] = [];
+			
+			rows?.forEach((row, rowIdx) => {
+				const rowData: any = {};
+				columns.forEach((col: any) => {
+					const input = row.querySelector(`[name="${fieldName}_${row.getAttribute('data-row-index')}_${col.name}"]`) as HTMLInputElement | HTMLSelectElement;
+					if (input) {
+						rowData[col.name] = input.value;
+					}
+				});
+				data.push(rowData);
+			});
+			
+			return data;
+		}
+		
+		function updateHiddenInput() {
+			if (dataInput) {
+				dataInput.value = JSON.stringify(collectData());
+			}
+		}
+		
+		function addRow() {
+			const rows = rowsContainer?.querySelectorAll('.table-row');
+			if (rows && rows.length >= maxRows) return;
+			
+			const row = createRow();
+			rowsContainer?.appendChild(row);
+			
+			// Agregar listener al botón de eliminar
+			const removeBtn = row.querySelector('.remove-row-btn');
+			removeBtn?.addEventListener('click', () => {
+				row.remove();
+				updateVisibility();
+				updateHiddenInput();
+			});
+			
+			// Agregar listeners a los inputs para actualizar el hidden input
+			row.querySelectorAll('input, select').forEach((input) => {
+				input.addEventListener('change', updateHiddenInput);
+				input.addEventListener('input', updateHiddenInput);
+			});
+			
+			updateVisibility();
+			updateHiddenInput();
+		}
+		
+		// Event listener para agregar fila
+		addRowBtn?.addEventListener('click', addRow);
+		
+		// Agregar filas mínimas requeridas
+		for (let i = 0; i < minRows; i++) {
+			addRow();
+		}
+		
+		updateVisibility();
+	});
+</script>
+

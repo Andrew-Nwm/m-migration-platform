@@ -1,7 +1,65 @@
 ---
-const phone = "16464272634";
-const message = "Hola, estoy interesado en sus servicios de inmigración.";
-const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+// ==========================================
+// CONFIGURACIÓN FÁCIL DE EDITAR
+// ==========================================
+import { getCollection } from "astro:content";
+// Datos de contacto
+const contactData = {
+	phone: "16464272634",
+	whatsappMessage: "Hola, estoy interesado en sus servicios de inmigración.",
+	email: "m-migration@outlook.com",
+	addresses: [
+		"272 Nord Broad St, Elizabeth, New Jersey, 07202",
+		"40-01 75th St, New York, NY 11373, Estados Unidos"
+	]
+};
+
+// Redes sociales - solo cambia los href para actualizar los enlaces
+const socialLinks = [
+	{
+		name: "Facebook",
+		href: "https://www.facebook.com/profile.php?id=61578978987700",
+		icon: "facebook"
+	},
+	{
+		name: "Instagram", 
+		href: "https://www.instagram.com/m.migrationllc",
+		icon: "instagram"
+	},
+	{
+		name: "TikTok",
+		href: "https://tiktok.com/@m.migration_llc",
+		icon: "tiktok"
+	},
+	{
+		name: "LinkedIn",
+		href: "https://linkedin.com/company/m-migration-llc",
+		icon: "linkedin"
+	},
+	{
+		name: "WhatsApp",
+		href: `https://wa.me/${contactData.phone}?text=${encodeURIComponent(contactData.whatsappMessage)}`,
+		icon: "whatsapp"
+	}
+];
+
+// Servicios (los mismos que aparecen en la sección de servicios)
+const servicesCollection = await getCollection("services", ({ data }) => data.active);
+const services = servicesCollection.sort((a, b) => a.data.order - b.data.order);
+
+// Enlaces de la compañía
+const companyLinks = [
+	{ label: "Sobre Nosotros", href: "/nosotros" },
+	{ label: "Historias de Éxito", href: "/#stories-section" },
+	{ label: "Comentarios", href: "/#testimonials-section" },
+	{ label: "Formularios", href: "/formularios" }
+];
+
+// ==========================================
+// FIN DE CONFIGURACIÓN
+// ==========================================
+
+const whatsappLink = `https://wa.me/${contactData.phone}?text=${encodeURIComponent(contactData.whatsappMessage)}`;
 ---
 
 <footer id="contact" class="relative w-full bg-black border-t border-white/10">
@@ -10,8 +68,8 @@ const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}
 	>
 	</div>
 
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-16 relative z-10">
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-10 md:mb-12">
 			<div>
 				<div class="flex items-center space-x-3 mb-6">
 					<img
@@ -28,64 +86,45 @@ const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}
 					Especialistas en llenado de formularios migratorios.
 				</p>
 				<div class="flex space-x-3">
-					<a
-						href="#"
-						class="w-10 h-10 bg-gradient-to-br from-[#87b8c6] to-[#2e707b] rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
-					>
-						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-							<path
-								d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
-							></path>
-						</svg>
-					</a>
-					<a
-						href="#"
-						class="w-10 h-10 bg-gradient-to-br from-[#87b8c6] to-[#2e707b] rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
-					>
-						<svg
-							class="w-5 h-5"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
+					{socialLinks.map((social) => (
+						<a
+							href={social.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="w-10 h-10 bg-gradient-to-br from-[#87b8c6] to-[#2e707b] rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
+							aria-label={social.name}
 						>
-							<rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-							<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-							<line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-						</svg>
-					</a>
-					<a
-						href="#"
-						class="w-10 h-10 bg-gradient-to-br from-[#87b8c6] to-[#2e707b] rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
-					>
-						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-							<path
-								d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"
-							></path>
-						</svg>
-					</a>
-					<a
-						href="#"
-						class="w-10 h-10 bg-gradient-to-br from-[#87b8c6] to-[#2e707b] rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform"
-					>
-						<svg
-							class="w-5 h-5"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<path
-								d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
-							></path>
-							<rect width="4" height="12" x="2" y="9"></rect>
-							<circle cx="4" cy="4" r="2"></circle>
-						</svg>
-					</a>
+							{social.icon === "facebook" && (
+								<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+								</svg>
+							)}
+							{social.icon === "instagram" && (
+								<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+									<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+									<line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+								</svg>
+							)}
+							{social.icon === "tiktok" && (
+								<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+								</svg>
+							)}
+							{social.icon === "whatsapp" && (
+								<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+									<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+								</svg>
+							)}
+							{social.icon === "linkedin" && (
+								<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+									<rect width="4" height="12" x="2" y="9"></rect>
+									<circle cx="4" cy="4" r="2"></circle>
+								</svg>
+							)}
+						</a>
+					))}
 				</div>
 			</div>
 
@@ -94,26 +133,13 @@ const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}
 					Servicios
 				</h3>
 				<ul class="space-y-3 text-sm text-white/70">
-					<li>
-						<a href="#" class="hover:text-[#87b8c6] transition-colors">
-							Visas de Trabajo
-						</a>
-					</li>
-					<li>
-						<a href="#" class="hover:text-[#87b8c6] transition-colors">
-							Reunificación Familiar
-						</a>
-					</li>
-					<li>
-						<a href="#" class="hover:text-[#87b8c6] transition-colors">
-							VAWA
-						</a>
-					</li>
-					<li>
-						<a href="#" class="hover:text-[#87b8c6] transition-colors">
-							Visa U y T
-						</a>
-					</li>
+					{services.map((service) => (
+						<li>
+							<a href="/#services-section" class="hover:text-[#87b8c6] transition-colors">
+								{service.data.title}
+							</a>
+						</li>
+					))}
 				</ul>
 			</div>
 
@@ -122,42 +148,13 @@ const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}
 					Compañía
 				</h3>
 				<ul class="space-y-3 text-sm text-white/70">
-					<li>
-						<a
-							href="#hero-section"
-							class="hover:text-[#87b8c6] transition-colors"
-						>
-							Sobre Nosotros
-						</a>
-					</li>
-					<li>
-						<a
-							href={whatsappLink}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:text-[#87b8c6] transition-colors"
-						>
-							Nosotros
-						</a>
-					</li>
-					<li>
-						<a
-							href="testimonials-section"
-							class="hover:text-[#87b8c6] transition-colors"
-						>
-							Testimonios
-						</a>
-					</li>
-					<li>
-						<a
-							href={whatsappLink}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="hover:text-[#87b8c6] transition-colors"
-						>
-							Preguntas Frecuentes
-						</a>
-					</li>
+					{companyLinks.map((link) => (
+						<li>
+							<a href={link.href} class="hover:text-[#87b8c6] transition-colors">
+								{link.label}
+							</a>
+						</li>
+					))}
 				</ul>
 			</div>
 
@@ -166,36 +163,23 @@ const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}
 					Contacto
 				</h3>
 				<ul class="space-y-4 text-sm text-white/70">
-					<li class="flex items-start space-x-3">
-						<svg
-							class="w-5 h-5 text-[#87b8c6] flex-shrink-0 mt-0.5"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-							<circle cx="12" cy="10" r="3"></circle>
-						</svg>
-						<span>272 Nord Broad St, Elizabeth, New Jersey, 07202</span>
-					</li>
-					<li class="flex items-start space-x-3">
-						<svg
-							class="w-5 h-5 text-[#87b8c6] flex-shrink-0 mt-0.5"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-							<circle cx="12" cy="10" r="3"></circle>
-						</svg>
-						<span>40-01 75th St, New York, NY 11373, Estados Unidos</span>
-					</li>
+					{contactData.addresses.map((address) => (
+						<li class="flex items-start space-x-3">
+							<svg
+								class="w-5 h-5 text-[#87b8c6] flex-shrink-0 mt-0.5"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+								<circle cx="12" cy="10" r="3"></circle>
+							</svg>
+							<span>{address}</span>
+						</li>
+					))}
 					<li class="flex items-center space-x-3">
 						<svg
 							class="w-5 h-5 text-[#87b8c6] flex-shrink-0"
@@ -211,8 +195,8 @@ const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}
 							></path>
 						</svg>
 						<span>
-							<a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-								+1 (646) 427-2634
+							<a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="hover:text-[#87b8c6] transition-colors">
+								+1 ({contactData.phone.slice(1, 4)}) {contactData.phone.slice(4, 7)}-{contactData.phone.slice(7)}
 							</a>
 						</span>
 					</li>
@@ -230,10 +214,10 @@ const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}
 							<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
 						</svg>
 						<a
-							href="mailto:m-migration@outlook.com"
+							href={`mailto:${contactData.email}`}
 							class="hover:text-[#87b8c6] transition-colors"
 						>
-							m-migration@outlook.com
+							{contactData.email}
 						</a>
 					</li>
 				</ul>
@@ -241,23 +225,21 @@ const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}
 		</div>
 
 		<!-- Disclaimer -->
-		<div class="mb-8">
+		<div class="mb-6 sm:mb-8 px-2">
 			<div
-				class="max-w-4xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-6"
+				class="max-w-4xl mx-auto bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6"
 			>
-				<p class="text-xs text-white/70 text-center leading-relaxed">
-					<strong class="text-white/90">Aviso Importante:</strong> No somos abogados,
-					no ofrecemos asesoramiento legal ni actuamos en calidad de tales. Nuestro
-					servicio se centra en asistir con el llenado de formularios migratorios.
+				<p class="text-[10px] sm:text-xs text-white/70 text-center leading-relaxed">
+					<strong class="text-white/90">Aviso Importante:</strong> Nos especializamos en el llenado profesional de formularios migratorios, organización de documentos y seguimiento de procesos. Para asesoría legal, recomendamos consultar con un abogado de inmigración licenciado.
 				</p>
 			</div>
 		</div>
 
-		<div class="border-t border-white/10 pt-8">
+		<div class="border-t border-white/10 pt-6 sm:pt-8">
 			<div
 				class="flex flex-col items-center text-center space-y-4 md:space-y-0"
 			>
-				<p class="text-sm text-white/60 text-center">
+				<p class="text-xs sm:text-sm text-white/60 text-center">
 					© {new Date().getFullYear()} M-Migration LLC - Todos los derechos reservados.
 				</p>
 			</div>

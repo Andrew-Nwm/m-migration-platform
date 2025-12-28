@@ -1,0 +1,307 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { getCollection } from "astro:content";
+
+// contact-data
+const phone = "16464272634";
+const message = "Hola, estoy interesado en sus servicios de inmigración.";
+const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+// Cargar formularios
+const forms = await getCollection("forms");
+---
+
+<Layout
+	title="Formularios Migratorios - M-Migration LLC"
+	description="Accede a nuestros formularios migratorios profesionales. VAWA, Visa U, Visa T, permisos de trabajo y más."
+>
+	<Header slot="header" />
+
+	<!-- Hero Section -->
+	<section class="relative min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh] bg-black flex items-center justify-center overflow-hidden pt-16 sm:pt-20">
+		<div class="absolute inset-0 z-0">
+			<div class="absolute inset-0 bg-gradient-to-b from-primary/20 via-black to-black"></div>
+		</div>
+
+		<div class="relative z-10 text-center px-4 max-w-5xl mx-auto py-12 sm:py-16 md:py-20">
+			<span class="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-secondary/20 text-secondary rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6">
+				Área de Clientes
+			</span>
+			<h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
+				Formularios
+				<span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary via-primary to-[#0f3f4c]">
+					Migratorios
+				</span>
+			</h1>
+			<p class="text-base sm:text-lg md:text-xl text-white/70 max-w-2xl mx-auto px-2">
+				Ingresa tu código de empleado para acceder a los formularios de intake
+			</p>
+		</div>
+	</section>
+
+	<!-- Forms Section -->
+	<section class="relative bg-gradient-to-b from-black to-[#0a1214] py-12 sm:py-16 md:py-20 min-h-[50vh] sm:min-h-[60vh]">
+		<!-- Background Pattern -->
+		<div class="absolute inset-0 opacity-5">
+			<div 
+				class="absolute inset-0"
+				style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 40px 40px;"
+			></div>
+		</div>
+
+		<div class="container mx-auto px-4 relative z-10">
+			<!-- Sección de Código de Empleado -->
+			<div id="employee-code-section" class="max-w-sm sm:max-w-md mx-auto mb-10 sm:mb-12 md:mb-16">
+				<div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8">
+					<div class="flex items-center justify-center mb-4 sm:mb-6">
+						<div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-secondary to-primary flex items-center justify-center">
+							<svg class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+							</svg>
+						</div>
+					</div>
+					
+					<label for="employee-code" class="block text-white font-semibold mb-2 sm:mb-3 text-center text-sm sm:text-base">
+						Código de Empleado
+					</label>
+					
+					<div class="relative">
+						<input
+							type="text"
+							id="employee-code"
+							placeholder="Ingrese su código"
+							class="w-full px-4 py-3 sm:py-4 rounded-lg sm:rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all text-center text-base sm:text-lg tracking-widest uppercase"
+							maxlength="10"
+						/>
+					</div>
+					
+					<button
+						id="verify-code-btn"
+						class="w-full mt-4 sm:mt-6 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-secondary to-primary text-white font-bold rounded-lg sm:rounded-xl hover:opacity-90 transition-opacity text-base sm:text-lg"
+					>
+						Verificar Código
+					</button>
+					
+					<p id="code-error" class="hidden text-red-400 text-xs sm:text-sm mt-3 sm:mt-4 text-center">
+						Código inválido. Por favor, verifique e intente nuevamente.
+					</p>
+					
+					<p id="code-success" class="hidden text-green-400 text-xs sm:text-sm mt-3 sm:mt-4 text-center">
+						¡Código verificado! Accediendo a los formularios...
+					</p>
+				</div>
+				
+				<!-- Nota informativa -->
+				<p class="text-white/50 text-xs sm:text-sm text-center mt-4 sm:mt-6 px-2">
+					¿No tienes código? 
+					<a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="text-secondary hover:underline">
+						Contáctanos para obtener acceso
+					</a>
+				</p>
+			</div>
+
+			<!-- Grid de Formularios (oculto inicialmente) -->
+			<div id="forms-grid" class="forms-grid-hidden sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 max-w-7xl mx-auto opacity-0 transition-all duration-500">
+				{forms.map((form, idx) => (
+					<a
+						href={`/formularios/${form.slug}`}
+						class="form-card group"
+						data-index={idx}
+					>
+						<div class="relative h-48 sm:h-56 md:h-64 rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 group-hover:scale-105">
+							<div class={`absolute inset-0 bg-gradient-to-br ${form.data.color} opacity-80 group-hover:opacity-100 transition-opacity`}></div>
+
+							<div class="relative z-10 h-full flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center">
+								<div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 sm:mb-4 md:mb-6 group-hover:scale-110 transition-transform">
+									{form.data.icon === 'briefcase' && (
+										<svg class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+										</svg>
+									)}
+									{form.data.icon === 'shield' && (
+										<svg class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+										</svg>
+									)}
+									{form.data.icon === 'users' && (
+										<svg class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+										</svg>
+									)}
+									{form.data.icon === 'home' && (
+										<svg class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+										</svg>
+									)}
+									{form.data.icon === 'file' && (
+										<svg class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+										</svg>
+									)}
+									{form.data.icon === 'help' && (
+										<svg class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+										</svg>
+									)}
+								</div>
+
+								<h3 class="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">{form.data.title}</h3>
+								<p class="text-white/80 text-xs sm:text-sm md:text-base mb-3 sm:mb-4 md:mb-6 line-clamp-2">{form.data.description}</p>
+
+								<div class="inline-flex items-center gap-2 text-white font-semibold text-sm sm:text-base group-hover:gap-3 sm:group-hover:gap-4 transition-all">
+									Llenar formulario
+									<svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+									</svg>
+								</div>
+							</div>
+						</div>
+					</a>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA Section -->
+	<section class="relative bg-gradient-to-br from-[#0f3f4c] via-primary to-secondary py-12 sm:py-16 md:py-20 overflow-hidden">
+		<div class="absolute inset-0 opacity-20">
+			<div class="absolute top-0 left-0 w-48 sm:w-60 md:w-72 h-48 sm:h-60 md:h-72 bg-white rounded-full blur-3xl animate-pulse"></div>
+			<div class="absolute bottom-0 right-0 w-48 sm:w-60 md:w-72 h-48 sm:h-60 md:h-72 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 1000ms;"></div>
+		</div>
+
+		<div class="container mx-auto px-4 relative z-10">
+			<div class="max-w-3xl mx-auto text-center">
+				<h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 sm:mb-6">
+					¿Necesitas ayuda con tu proceso?
+				</h2>
+				<p class="text-base sm:text-lg text-white/90 mb-6 sm:mb-8 px-2">
+					Nuestro equipo está listo para asistirte en cada paso del camino.
+				</p>
+				
+				<a
+					href={whatsappLink}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-white text-[#0f3f4c] hover:bg-white/90 rounded-full font-bold text-base sm:text-lg transition-colors"
+				>
+					<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+						<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+					</svg>
+					Contactar por WhatsApp
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<Footer slot="footer" />
+</Layout>
+
+<style>
+	.forms-grid-hidden {
+		display: none;
+	}
+	
+	.form-card {
+		animation: fadeInUp 0.5s ease-out forwards;
+		opacity: 0;
+	}
+	
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+</style>
+
+<script>
+	// Códigos de empleado válidos (hardcoded)
+	const VALID_EMPLOYEE_CODES: Record<string, string> = {
+		'MMIG2024': 'Empleado General',
+		'ADMIN001': 'Administrador',
+		'DANIA001': 'Dania Beita',
+		'RAFAEL01': 'Rafael Beita',
+		'EMP12345': 'Empleado 1',
+		'EMP67890': 'Empleado 2',
+	};
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const codeInput = document.getElementById('employee-code') as HTMLInputElement;
+		const verifyBtn = document.getElementById('verify-code-btn');
+		const codeError = document.getElementById('code-error');
+		const codeSuccess = document.getElementById('code-success');
+		const employeeSection = document.getElementById('employee-code-section');
+		const formsGrid = document.getElementById('forms-grid');
+
+		// Verificar si ya hay un código válido en sessionStorage
+		const savedCode = sessionStorage.getItem('employeeCode');
+		if (savedCode && VALID_EMPLOYEE_CODES[savedCode.toUpperCase()]) {
+			showForms();
+		}
+
+		function showForms() {
+			if (employeeSection && formsGrid) {
+				employeeSection.classList.add('hidden');
+				formsGrid.classList.remove('forms-grid-hidden');
+				formsGrid.classList.add('grid');
+				// Trigger animation
+				setTimeout(() => {
+					formsGrid.classList.remove('opacity-0');
+					formsGrid.classList.add('opacity-100');
+				}, 50);
+			}
+		}
+
+		function validateCode() {
+			const code = codeInput?.value.trim().toUpperCase();
+			
+			if (code && VALID_EMPLOYEE_CODES[code]) {
+				// Código válido
+				codeError?.classList.add('hidden');
+				codeSuccess?.classList.remove('hidden');
+				
+				// Guardar en sessionStorage
+				sessionStorage.setItem('employeeCode', code);
+				
+				// Mostrar formularios después de un breve delay
+				setTimeout(() => {
+					showForms();
+				}, 1000);
+			} else {
+				// Código inválido
+				codeSuccess?.classList.add('hidden');
+				codeError?.classList.remove('hidden');
+				
+				// Shake animation
+				codeInput?.classList.add('animate-shake');
+				setTimeout(() => {
+					codeInput?.classList.remove('animate-shake');
+				}, 300);
+			}
+		}
+
+		// Event listeners
+		verifyBtn?.addEventListener('click', validateCode);
+		
+		codeInput?.addEventListener('keypress', (e) => {
+			if (e.key === 'Enter') {
+				validateCode();
+			}
+		});
+
+		// Auto-uppercase
+		codeInput?.addEventListener('input', () => {
+			if (codeInput) {
+				codeInput.value = codeInput.value.toUpperCase();
+			}
+		});
+	});
+</script>
+
+

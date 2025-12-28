@@ -113,45 +113,106 @@ fields:
     type: "select"
     options: ["Abandono de su padre/no lo conoce", "Abandono de su madre/no lo conoce", "Su padre va a renunciar a la custodia- no está en el país", "Su madre va a renunciar a la custodia- no está en el país", "Su padre va a renunciar a la custodia- si está en el país", "Su madre va a renunciar a la custodia- si está en el país", "Abuso/Negligencia del Padre/Madre"]
     required: false
-  - name: "direccionMenorActual"
-    label: "Dirección Actual Completa del menor"
-    type: "text"
+  - name: "direccionesMenor"
+    label: "Direcciones donde ha vivido el menor"
+    type: "table"
     required: false
-  - name: "direccionMenorAnt1"
-    label: "Dirección Anterior Completa 1"
-    type: "text"
+    minRows: 1
+    maxRows: 5
+    columns:
+      - name: "direccion"
+        label: "Dirección completa"
+        type: "text"
+      - name: "ciudad"
+        label: "Ciudad"
+        type: "text"
+      - name: "estado"
+        label: "Estado/País"
+        type: "text"
+      - name: "desde"
+        label: "Desde"
+        type: "text"
+      - name: "hasta"
+        label: "Hasta"
+        type: "text"
+
+  - name: "personasCuidadoras"
+    label: "Personas que han cuidado al menor"
+    type: "table"
     required: false
-  - name: "direccionMenorAnt2"
-    label: "Dirección Anterior Completa 2"
-    type: "text"
-    required: false
-  - name: "direccionMenorAnt3"
-    label: "Dirección Anterior Completa 3"
-    type: "text"
-    required: false
-  - name: "cuidadorNombre1"
-    label: "Nombre de la persona cuidadora 1"
-    type: "text"
-    required: false
-  - name: "nacimientoCuidador1"
-    label: "Fecha de nacimiento cuidador 1"
-    type: "text"
-    required: false
-  - name: "relacionCuidador1"
-    label: "Relación con el menor cuidador 1"
-    type: "text"
-    required: false
-  - name: "direccionCuidador1"
-    label: "Dirección actual cuidador 1"
-    type: "text"
-    required: false
+    minRows: 1
+    maxRows: 5
+    columns:
+      - name: "nombreCuidador"
+        label: "Nombre completo"
+        type: "text"
+      - name: "fechaNacCuidador"
+        label: "Fecha nacimiento"
+        type: "date"
+      - name: "relacionCuidador"
+        label: "Relación con el menor"
+        type: "text"
+      - name: "direccionCuidador"
+        label: "Dirección actual"
+        type: "text"
   - name: "casados"
-    label: "Los padres del menor estuvieron casados"
-    type: "checkbox"
+    label: "¿Los padres del menor estuvieron casados?"
+    type: "radio"
+    options:
+      - "Sí"
+      - "No"
     required: false
-  - name: "observaciones"
-    label: "Observaciones"
+  - name: "fechaInicialMatrimonio"
+    label: "Fecha Inicial del matrimonio (Mes/Día/Año)"
+    type: "date"
+    required: false
+  - name: "fechaFinalMatrimonio"
+    label: "Fecha Final del matrimonio (Mes/Día/Año)"
+    type: "date"
+    required: false
+  - name: "paisMatrimonio"
+    label: "País de matrimonio"
+    type: "text"
+    required: false
+  - name: "paisDivorcio"
+    label: "País de divorcio"
+    type: "text"
+    required: false
+  - name: "razonMejorGuardian"
+    label: "¿Por qué cree que usted es la mejor persona para ser guardián del menor?"
     type: "textarea"
     required: false
+  - name: "razonPadresNoTutores"
+    label: "¿Por qué cree que el padre o madre no pueden ser los tutores del menor?"
+    type: "textarea"
+    required: false
+  - name: "observaciones"
+    label: "Observaciones adicionales"
+    type: "textarea"
+    required: false
+requiredFiles:
+  - "1. Documentos de migración del menor (I-94, visa, etc.)"
+  - "2. Certificado de nacimiento del menor (con traducción si no está en inglés)"
+  - "3. Pasaporte del guardián"
+  - "4. Pasaporte del menor"
+  - "5. Cualquier Otro Documento Que Sirva De Prueba"
+
 ---
-Formulario para Estatus de Inmigrante Juvenil Especial (SIJ). Incluye datos del menor, padres, guardián y direcciones.
+La clasificación de Inmigrante Juvenil Especial (SIJ), por sus siglas en inglés) permite que ciertos 
+niños no ciudadanos soliciten el estatus de residente permanente legal en los Estados Unidos 
+(también conocido como solicitud de una Green Card). 
+Estos niños han estado sujetos a procedimientos judiciales estatales de menores relacionados con 
+el abuso, la negligencia, el abandono o una base similar según la ley estatal. 
+El Estatus Especial de Inmigrante Juvenil (SIJ, por sus siglas en inglés) es una forma para que los 
+jóvenes inmigrantes (menores de 21 años) obtengan un estatus legal en los Estados Unidos. 
+Es posible que califique para SIJS si: 
+ 
+Son Menores de 21 años 
+No está casado 
+Ya está en los EE. UU. y es indocumentado 
+Separado o lastimado por uno o ambos de sus padres 
+ 
+SIJS le permite permanecer legalmente en los Estados Unidos. Con SIJS, puedes: 
+ 
+* Solicitar una tarjeta verde (residencia permanente legal) 
+* Solicitar autorización para trabajar

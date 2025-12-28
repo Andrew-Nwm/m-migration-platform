@@ -1,9 +1,17 @@
 ---
-import { getEntry } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import DynamicForm from "../../components/forms/DynamicForm.astro";
+
+// Generar rutas estáticas para todos los formularios
+export async function getStaticPaths() {
+	const forms = await getCollection("forms");
+	return forms.map((form) => ({
+		params: { id: form.slug },
+	}));
+}
 
 const { id } = Astro.params;
 
@@ -78,7 +86,7 @@ const { data } = form;
 	</section>
 
 	<!-- Form Section -->
-	<DynamicForm fields={data.fields} formId={form.slug} requiredFiles={data.requiredFiles} />
+	<DynamicForm fields={data.fields} formId={form.slug} requiredFiles={data.requiredFiles} photoRequirements={data.photoRequirements} />
 
 	<Footer slot="footer" />
 </Layout>

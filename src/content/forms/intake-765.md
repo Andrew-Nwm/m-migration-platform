@@ -41,10 +41,18 @@ fields:
     type: "textarea"
     required: false
 requiredFiles:
-  - "Pasaporte vigente"
-  - "Formulario I-765 completado"
-  - "Fotografías tamaño pasaporte (2)"
-  - "Comprobante de pago de tarifas"
-  - "Documentos de identidad"
+  - "ID válido con foto (pasaporte, licencia, ID consular, etc.)"
+  - "Copia de documentos migratorios (I-94, carta de asilo, notificación de USCIS, etc.)"
+  - "Una (1) foto digital tipo pasaporte"
+photoRequirements:
+  - "Color (no blanco y negro)"
+  - "Tomada en los últimos 6 meses"
+  - "Fondo blanco, sin sombras"
+  - "Cara centrada, vista frontal, expresión neutral, ojos abiertos"
+  - "Sin lentes, salvo razones médicas con constancia firmada por un doctor"
+  - "Sin sombreros, audífonos o accesorios (excepto uso religioso diario)"
+  - "Ropa de uso diario, sin uniformes (salvo religiosos)"
+  - "No se aceptan fotos escaneadas de documentos ni tomadas con filtros, apps, revistas o de cuerpo completo"
 ---
+
 Formulario para solicitar autorización de empleo (I-765). Incluye campos personales, familiares y antecedentes penales. Adjuntar documentos requeridos según instrucciones.

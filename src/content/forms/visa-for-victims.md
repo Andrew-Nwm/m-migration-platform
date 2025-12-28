@@ -12,6 +12,23 @@ fields:
     label: "Número de registro de extranjero (A-Number) (si tienes)"
     type: "text"
     required: false
+  - name: "historialVivienda"
+    label: "¿Dónde has vivido durante los últimos cinco años (proporcionar todas las direcciones y fechas)? "
+    type: "table"
+    required: true
+    minRows: 5
+    maxRows: 5
+    columns:
+      - name: "adress"
+        label: "Dirección"
+        type: "text"
+      - name: "desde"
+        label: "Desde (mes/año)"
+        type: "text"
+      - name: "hasta"
+        label: "Hasta (mes/año)"
+        type: "text"
+
   - name: "telefono"
     label: "Teléfono de contacto"
     type: "tel"
@@ -66,11 +83,37 @@ fields:
     required: false
   - name: "arresto"
     label: "¿Has sido arrestado(a), citado(a), acusado(a), multado(a), o condenado(a) dentro o fuera de EE. UU.? (Explica cada caso)"
-    type: "text"
+    type: "textarea"
     required: false
   - name: "ocupacion"
     label: "¿Cuál es tu ocupación actual o más reciente?"
     type: "text"
     required: false
+  - name: "EmpleosAnteriores"
+    label: "¿Tienes empleos anteriores? (Proporcionar detalles para cada uno)"
+    type: "table"
+    required: true
+    minRows: 3
+    maxRows: 5
+    columns:
+      - name: "nombreEmpleo"
+        label: "Nombre"
+        type: "text"
+      - name: "direccionEmpleo"
+        label: "Direccion"
+        type: "text"
+      - name: "desdeEmpleo"
+        label: "Desde (mes/año)"
+        type: "text"
+      - name: "hastaEmpleo"
+        label: "Hasta (mes/año)"
+        type: "text"
+      - name: "ocupacionEmpleo"
+        label: "Ocupacion"
+        type: "text"
+        
+
+
+
 ---
 Formulario para admisión de visa para víctimas. Incluye datos personales, familiares, antecedentes y motivos migratorios.
