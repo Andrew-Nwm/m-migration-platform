@@ -17,10 +17,39 @@ export default defineConfig({
 			lastmod: new Date(),
 		}),
 	],
+	output: "server",
+	site: "https://m-migration.com",
+
 	vite: {
 		plugins: [tailwindcss()],
 		define: {
 			'import.meta.env.PUBLIC_API_URL': JSON.stringify(API_URL),
+		},
+	},
+
+	env: {
+		schema: {
+			SHAREPOINT_TENANT_ID: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+			SHAREPOINT_CLIENT_ID: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+			SHAREPOINT_CLIENT_SECRET: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+			SHAREPOINT_SITE_ID: envField.string({
+				context: "server",
+				access: "secret",
+			}),
+			SHAREPOINT_DRIVE_ID: envField.string({
+				context: "server",
+				access: "secret",
+				optional: true,
+			}),
 		},
 	},
 });
